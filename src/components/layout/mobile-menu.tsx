@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { CoinsIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Suspense } from "react";
 import { type NavigationItem } from "./header";
 
 type MobileMenuProps = {
@@ -14,7 +15,29 @@ type MobileMenuProps = {
   onClose: () => void;
 };
 
-export function MobileMenu({ navigationItems, onClose }: MobileMenuProps) {
+function MobileMenuFallback() {
+  return (
+    <SheetContent side="right" className="w-full max-w-xs">
+      <SheetHeader className="flex flex-row items-center gap-4 justify-between mt-4">
+        <SheetTitle className="text-left font-mono text-primary flex items-center">
+          cotiz
+          <CoinsIcon className="ml-0.5 size-4 text-primary rotate-90" />
+        </SheetTitle>
+        <div className="h-8 w-8 bg-muted rounded-md animate-pulse"></div>
+      </SheetHeader>
+      <div className="flex flex-col gap-4 mx-2 mt-4">
+        {[1, 2, 3].map((i) => (
+          <div
+            key={i}
+            className="h-10 w-full bg-muted rounded-md animate-pulse"
+          ></div>
+        ))}
+      </div>
+    </SheetContent>
+  );
+}
+
+function MobileMenuContent({ navigationItems, onClose }: MobileMenuProps) {
   const pathname = usePathname();
 
   const isActive = (href: string) => {
@@ -53,5 +76,13 @@ export function MobileMenu({ navigationItems, onClose }: MobileMenuProps) {
         <SignupModal className="bg-primary text-primary-foreground" />
       </nav>
     </SheetContent>
+  );
+}
+
+export function MobileMenu(props: MobileMenuProps) {
+  return (
+    <Suspense fallback={<MobileMenuFallback />}>
+      <MobileMenuContent {...props} />
+    </Suspense>
   );
 }

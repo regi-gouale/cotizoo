@@ -10,7 +10,7 @@ import { useScrollDetection } from "@/lib/hooks/use-scroll-detection";
 import { cn } from "@/lib/utils";
 import { CoinsIcon, MenuIcon, X } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 
 // Déplaçons ce type dans un fichier de types pour le réutiliser
 export type NavigationItem = {
@@ -25,7 +25,43 @@ export const navigationItems: NavigationItem[] = [
   { label: "À propos", href: "/about" },
 ];
 
-export function Header() {
+function HeaderFallback() {
+  return (
+    <header className="sticky top-0 w-full border-b z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-16 items-center justify-between mx-auto gap-x-2 max-w-6xl px-4">
+        <div className="flex items-center gap-6">
+          <BrandLogo />
+        </div>
+        <div className="hidden md:flex gap-6">
+          {[1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className="h-6 w-16 bg-muted rounded-md animate-pulse"
+            ></div>
+          ))}
+        </div>
+        <div className="flex items-center gap-4">
+          <div className="h-9 w-9 bg-muted rounded-md animate-pulse hidden md:block"></div>
+          <div className="h-9 w-32 bg-primary/30 rounded-md animate-pulse hidden md:block"></div>
+          <div className="h-9 w-9 bg-muted rounded-md animate-pulse md:hidden"></div>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+function BrandLogo() {
+  return (
+    <Link href="/" className="flex items-center gap-2 ml-2 group">
+      <span className="text-3xl font-bold text-primary font-mono transition-all duration-300 group-hover:scale-105 group-hover:text-primary/90 flex">
+        cotiz
+        <CoinsIcon className="ml-0.5 size-8 text-primary rotate-90" />
+      </span>
+    </Link>
+  );
+}
+
+function HeaderContent() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isScrolled = useScrollDetection(20);
 
@@ -82,13 +118,10 @@ export function Header() {
   );
 }
 
-function BrandLogo() {
+export function Header() {
   return (
-    <Link href="/" className="flex items-center gap-2 ml-2 group">
-      <span className="text-3xl font-bold text-primary font-mono transition-all duration-300 group-hover:scale-105 group-hover:text-primary/90 flex">
-        cotiz
-        <CoinsIcon className="ml-0.5 size-8 text-primary rotate-90" />
-      </span>
-    </Link>
+    <Suspense fallback={<HeaderFallback />}>
+      <HeaderContent />
+    </Suspense>
   );
 }

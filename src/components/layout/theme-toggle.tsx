@@ -9,13 +9,21 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
-export function ThemeToggle(props: { className?: string }) {
+function ThemeToggleFallback(props: { className?: string }) {
+  return (
+    <Button variant="ghost" size="icon" className={props.className} disabled>
+      <Sun className="h-[1.2rem] w-[1.2rem]" />
+      <span className="sr-only">Chargement du sélecteur de thème</span>
+    </Button>
+  );
+}
+
+function ThemeToggleContent(props: { className?: string }) {
   const { setTheme, theme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  // Éviter le problème d'hydratation avec next-themes
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -45,5 +53,13 @@ export function ThemeToggle(props: { className?: string }) {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
+  );
+}
+
+export function ThemeToggle(props: { className?: string }) {
+  return (
+    <Suspense fallback={<ThemeToggleFallback {...props} />}>
+      <ThemeToggleContent {...props} />
+    </Suspense>
   );
 }

@@ -2,10 +2,28 @@
 
 import { CircleSvg } from "@/components/svg/circle-svg";
 import { CoinsIcon } from "lucide-react";
+import { Suspense } from "react";
 import { SignupModal } from "../forms/cta-modal";
 import { Button } from "../ui/button";
 
-export function HeroSection() {
+function HeroSectionFallback() {
+  return (
+    <div className="relative isolate flex flex-col overflow-hidden animate-pulse">
+      <main className="w-full px-4">
+        <div className="container mx-auto flex flex-col items-center text-center gap-y-10 h-[calc(100vh-4rem)] justify-center">
+          <div className="h-16 w-full max-w-3xl bg-muted rounded-md"></div>
+          <div className="h-8 w-full max-w-2xl bg-muted rounded-md"></div>
+          <div className="flex gap-4">
+            <div className="h-10 w-40 bg-primary/30 rounded-md"></div>
+            <div className="h-10 w-32 bg-muted rounded-md"></div>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
+
+function HeroSectionContent() {
   return (
     <div className="relative isolate flex flex-col overflow-hidden">
       {/* Background Elements - Coins */}
@@ -76,5 +94,13 @@ export function HeroSection() {
         </div>
       </main>
     </div>
+  );
+}
+
+export function HeroSection() {
+  return (
+    <Suspense fallback={<HeroSectionFallback />}>
+      <HeroSectionContent />
+    </Suspense>
   );
 }

@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Suspense } from "react";
 import { type NavigationItem } from "./header";
 
 type NavigationItemsProps = {
@@ -10,7 +11,20 @@ type NavigationItemsProps = {
   className?: string;
 };
 
-export function NavigationItems({ items, className }: NavigationItemsProps) {
+function NavigationItemsFallback({ className }: { className?: string }) {
+  return (
+    <nav className={className}>
+      {[1, 2, 3].map((i) => (
+        <div
+          key={i}
+          className="h-6 w-16 bg-muted rounded-md animate-pulse mx-2"
+        ></div>
+      ))}
+    </nav>
+  );
+}
+
+function NavigationItemsContent({ items, className }: NavigationItemsProps) {
   const pathname = usePathname();
 
   const isActive = (href: string) => {
@@ -37,5 +51,15 @@ export function NavigationItems({ items, className }: NavigationItemsProps) {
         </Link>
       ))}
     </nav>
+  );
+}
+
+export function NavigationItems(props: NavigationItemsProps) {
+  return (
+    <Suspense
+      fallback={<NavigationItemsFallback className={props.className} />}
+    >
+      <NavigationItemsContent {...props} />
+    </Suspense>
   );
 }
