@@ -60,7 +60,7 @@ export function Header() {
           <Link href="/" className="flex items-center gap-2 ml-2 group">
             <span className="text-3xl font-bold text-primary font-mono transition-all duration-300 group-hover:scale-105 group-hover:text-primary/90 flex">
               cotiz
-              <CoinsIcon className="size-8 text-primary" />
+              <CoinsIcon className="ml-0.5 size-8 text-primary rotate-90" />
             </span>
           </Link>
         </div>
@@ -85,7 +85,7 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-4">
-          <ThemeToggle className="hidden md:flex" />
+          <ThemeToggle className="hidden md:flex text-primary" />
           <Button
             asChild
             className="hidden md:flex transition-all duration-300 hover:shadow-md hover:translate-y-[-2px]"
@@ -113,7 +113,7 @@ export function Header() {
                 <SheetTitle className="text-left font-mono text-primary">
                   Cotizoo
                 </SheetTitle>
-                <ThemeToggle className="" />
+                <ThemeToggle className="text-primary" />
               </SheetHeader>
               <nav className="flex flex-col gap-4 mx-2 mt-4">
                 {navigationItems.map((item) => (
