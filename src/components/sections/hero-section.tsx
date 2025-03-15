@@ -1,12 +1,29 @@
 "use client";
 
 import { CircleSvg } from "@/components/svg/circle-svg";
+import { CoinsIcon } from "lucide-react";
 import { SignupModal } from "../forms/cta-modal";
 import { Button } from "../ui/button";
 
 export function HeroSection() {
   return (
-    <div className="relative isolate flex flex-col">
+    <div className="relative isolate flex flex-col overflow-hidden">
+      {/* Background Elements - Coins */}
+      <div className="absolute inset-0 -z-10">
+        {/* Top left coin */}
+        <CoinsIcon className="absolute top-10 left-10 text-primary w-20 h-20 animate-float-slow" />
+        {/* Top right coin */}
+        <CoinsIcon className="absolute top-20 right-40 text-primary w-16 h-16 rotate-12 animate-float-slow-reverse" />
+        {/* Bottom left coin */}
+        <CoinsIcon className="absolute bottom-20 left-1/4 text-primary w-24 h-24 rotate-45 animate-float" />
+        {/* Bottom right coin */}
+        <CoinsIcon className="absolute bottom-40 right-10 text-primary w-20 h-20 -rotate-12 animate-float-slow" />
+        {/* Middle coin */}
+        <CoinsIcon className="absolute top-1/2 left-20 text-primary w-16 h-16 rotate-24 animate-float-reverse" />
+        {/* Background gradient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 to-background/90" />
+      </div>
+
       <main className="w-full px-4" id="hero">
         <div className="container mx-auto flex flex-col items-center text-center gap-y-10 h-[calc(100vh-4rem)] justify-center">
           {/* Main Title with Image */}
