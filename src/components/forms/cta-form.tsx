@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { saveLead } from "@/server/actions/lead.action";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -37,18 +38,26 @@ export function CtaForm(props: CtaFormProps) {
 
   const onSubmit = async (data: z.infer<typeof CtaSchema>) => {
     try {
-      // TODO: Implémenter l'appel API pour l'inscription
-      console.log("Form data:", data);
-      toast.success("Votre inscription a bien été prise en compte !");
+      const result = await saveLead(data);
 
-      // Nettoyer le formulaire après soumission réussie
+      if (result.success) {
+        if (result.isExisting) {
+          toast.info(result.message);
+        } else {
+          toast.success(result.message);
+        }
 
-      form.reset({
-        firstName: "",
-        email: "",
-      });
-      if (onSuccess) {
-        onSuccess();
+        // Nettoyer le formulaire après soumission réussie
+        form.reset({
+          firstName: "",
+          email: "",
+        });
+
+        if (onSuccess) {
+          onSuccess();
+        }
+      } else {
+        toast.error(result.message);
       }
     } catch (error) {
       toast.error("Une erreur est survenue lors de l'inscription");

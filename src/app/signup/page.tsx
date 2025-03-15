@@ -2,7 +2,7 @@ import { SignupModal } from "@/components/forms/cta-modal";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-export function SignupPage() {
+export default function SignupPage() {
   return (
     <div className="container mx-auto px-4 py-16">
       <div className="max-w-md mx-auto bg-background rounded-lg shadow-md p-8 border border-border">
@@ -49,5 +49,3 @@ export function SignupPage() {
     </div>
   );
 }
-
-export default SignupPage;
