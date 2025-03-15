@@ -1,7 +1,7 @@
 import { CircleSvg } from "@/components/svg/circle-svg";
 import { Button } from "@/components/ui/button";
-import { GridBackground } from "../layout/grid-background";
-import { GradientBackground } from "../layout/gradient-background";
+import { GridBackground } from "@/components/layout/grid-background";
+import { GradientBackground } from "@/components/layout/gradient-background";
 
 export function HeroSection() {
   return (
