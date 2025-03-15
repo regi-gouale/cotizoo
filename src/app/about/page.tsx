@@ -1,14 +1,19 @@
 import { Button } from "@/components/ui/button";
+import { CoinsIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 export function AboutPage() {
   return (
-    <div className="container mx-auto px-4 py-16">
+    <div className="container mx-auto px-4 py-16 font-sans">
       {/* Hero Section */}
       <div className="mb-20 text-center">
-        <h1 className="text-4xl md:text-5xl font-bold mb-6 font-title">
-          À propos de Cotizoo
+        <h1 className="text-4xl md:text-5xl font-bold mb-6 font-title flex items-center justify-center gap-2">
+          À propos de{" "}
+          <span className="flex items-center gap-1 font-mono">
+            <span>cotiz</span>
+            <CoinsIcon className="size-12 rotate-90" />
+          </span>{" "}
         </h1>
         <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
           Découvrez comment notre plateforme révolutionne la gestion des
@@ -17,7 +22,7 @@ export function AboutPage() {
       </div>
 
       {/* Notre Mission */}
-      <section className="mb-20">
+      <section className="mb-20 max-w-5xl mx-auto">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
             <h2 className="text-3xl font-bold mb-6 font-title">
@@ -55,7 +60,7 @@ export function AboutPage() {
           Comment fonctionne notre plateforme
         </h2>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           <div className="bg-background p-6 rounded-lg shadow-sm">
             <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center mb-4">
               <span className="text-xl font-bold text-primary">1</span>
@@ -71,7 +76,9 @@ export function AboutPage() {
             <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center mb-4">
               <span className="text-xl font-bold text-primary">2</span>
             </div>
-            <h3 className="text-xl font-semibold mb-3">Invitez vos membres</h3>
+            <h3 className="text-xl font-semibold mb-3 font-title">
+              Invitez vos membres
+            </h3>
             <p className="text-muted-foreground">
               Invitez famille, amis ou collègues à rejoindre votre tontine en
               toute simplicité.
@@ -82,7 +89,7 @@ export function AboutPage() {
             <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center mb-4">
               <span className="text-xl font-bold text-primary">3</span>
             </div>
-            <h3 className="text-xl font-semibold mb-3">
+            <h3 className="text-xl font-semibold mb-3 font-title">
               Gérez en toute sérénité
             </h3>
             <p className="text-muted-foreground">
@@ -99,9 +106,11 @@ export function AboutPage() {
           Les avantages de Cotizoo
         </h2>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
           <div className="border border-border p-6 rounded-lg hover:border-primary/50 transition-colors">
-            <h3 className="text-xl font-semibold mb-3">Sécurité garantie</h3>
+            <h3 className="text-xl font-semibold mb-3 font-title">
+              Sécurité garantie
+            </h3>
             <p className="text-muted-foreground">
               Transactions sécurisées et traçabilité complète des fonds à tout
               moment.
@@ -109,7 +118,7 @@ export function AboutPage() {
           </div>
 
           <div className="border border-border p-6 rounded-lg hover:border-primary/50 transition-colors">
-            <h3 className="text-xl font-semibold mb-3">
+            <h3 className="text-xl font-semibold mb-3 font-title">
               Simplicité d'utilisation
             </h3>
             <p className="text-muted-foreground">
@@ -119,7 +128,9 @@ export function AboutPage() {
           </div>
 
           <div className="border border-border p-6 rounded-lg hover:border-primary/50 transition-colors">
-            <h3 className="text-xl font-semibold mb-3">Transparence totale</h3>
+            <h3 className="text-xl font-semibold mb-3 font-title">
+              Transparence totale
+            </h3>
             <p className="text-muted-foreground">
               Visualisez en temps réel l'état de votre tontine et l'historique
               des opérations.
@@ -127,7 +138,9 @@ export function AboutPage() {
           </div>
 
           <div className="border border-border p-6 rounded-lg hover:border-primary/50 transition-colors">
-            <h3 className="text-xl font-semibold mb-3">Automatisation</h3>
+            <h3 className="text-xl font-semibold mb-3 font-title">
+              Automatisation
+            </h3>
             <p className="text-muted-foreground">
               Fini les rappels manuels et les erreurs de calcul. Tout est
               automatisé.
@@ -160,9 +173,9 @@ export function AboutPage() {
           Questions fréquentes
         </h2>
 
-        <div className="space-y-6 max-w-3xl mx-auto">
+        <div className="space-y-6 max-w-5xl mx-auto">
           <div>
-            <h3 className="text-xl font-semibold mb-2">
+            <h3 className="text-xl font-semibold mb-2 font-title">
               Qu'est-ce qu'une tontine ?
             </h3>
             <p className="text-muted-foreground">
@@ -174,7 +187,7 @@ export function AboutPage() {
           </div>
 
           <div>
-            <h3 className="text-xl font-semibold mb-2">
+            <h3 className="text-xl font-semibold mb-2 font-title">
               Comment Cotizoo assure-t-il la sécurité des fonds ?
             </h3>
             <p className="text-muted-foreground">
@@ -185,7 +198,7 @@ export function AboutPage() {
           </div>
 
           <div>
-            <h3 className="text-xl font-semibold mb-2">
+            <h3 className="text-xl font-semibold mb-2 font-title">
               Puis-je gérer plusieurs tontines simultanément ?
             </h3>
             <p className="text-muted-foreground">
@@ -196,7 +209,7 @@ export function AboutPage() {
           </div>
 
           <div>
-            <h3 className="text-xl font-semibold mb-2">
+            <h3 className="text-xl font-semibold mb-2 font-title">
               Y a-t-il des frais cachés ?
             </h3>
             <p className="text-muted-foreground">
