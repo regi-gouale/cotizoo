@@ -105,17 +105,17 @@ Ouvrez [http://localhost:3000](http://localhost:3000) avec votre navigateur pour
 
 ```
 cotizoo/
-├── app/               # Routes Next.js
-├── components/        # Composants UI réutilisables
-├── lib/              # Utilitaires et fonctions
-├── prisma/           # Schéma de base de données et migrations
-├── public/           # Fichiers statiques
-└── docs/             # Documentation du projet
+├── .github/            # Actions GitHub
+├── .vscode/            # Configuration VSCode
+├── src/                # Code source de l'application
+│   ├── app/            # Configuration de l'application
+│   ├── components/     # Composants réutilisables
+│   ├── lib/            # Fonctions utilitaires
+│   ├── prisma/         # Modèles de données Prisma
+│   ├── providers/      # Contextes et hooks
+├── public/             # Fichiers statiques
+└── docs/               # Documentation du projet
 ```
-
-## Développement
-
-### Modèle de tontine
 
 L'application prend en charge plusieurs types de tontines et modes de distribution:
 
