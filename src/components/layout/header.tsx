@@ -22,7 +22,7 @@ type NavigationItem = {
 
 const navigationItems: NavigationItem[] = [
   { label: "Accueil", href: "/" },
-  { label: "Produits", href: "/#products" },
+  { label: "Fonctionnalités", href: "/#features" },
   { label: "Tarifs", href: "/#pricing" },
   { label: "À propos", href: "/#about" },
 ];
@@ -59,8 +59,8 @@ export function Header() {
       <div className="container flex h-16 items-center justify-between mx-auto gap-x-2">
         <div className="flex items-center gap-6">
           <Link href="/" className="flex items-center gap-2 ml-2 group">
-            <span className="text-xl font-bold text-primary font-mono transition-all duration-300 group-hover:scale-105 group-hover:text-primary/90">
-              Cotizoo
+            <span className="text-3xl font-bold text-primary font-mono transition-all duration-300 group-hover:scale-105 group-hover:text-primary/90">
+              cotizoo
             </span>
           </Link>
         </div>
@@ -71,7 +71,7 @@ export function Header() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "text-sm font-medium transition-colors relative py-1 px-2 rounded-md",
+                  "text-sm font-medium transition-colors relative py-1 px-2 rounded-md font-title",
                   isActive(item.href)
                     ? "text-foreground after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary after:transform after:origin-bottom after:scale-x-100 after:transition-transform"
                     : "text-muted-foreground hover:text-foreground hover:bg-muted/30 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-primary after:transform after:origin-bottom after:scale-x-0 after:transition-transform hover:after:scale-x-100",
@@ -124,7 +124,7 @@ export function Header() {
                     key={item.href}
                     href={item.href}
                     className={cn(
-                      "text-base font-medium transition-all duration-200 px-2 py-2 rounded-md",
+                      "text-base font-medium transition-all duration-200 px-2 py-2 rounded-md font-title",
                       isActive(item.href)
                         ? "text-foreground bg-muted"
                         : "text-muted-foreground hover:text-foreground hover:bg-muted/50 hover:translate-x-1",
