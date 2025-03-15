@@ -44,7 +44,10 @@ export function HeroSection() {
                 triggerText="Je réjoins la communauté"
               />
             </Button>
-            <Button variant="ghost" className="font-bold">
+            <Button
+              variant="ghost"
+              className="font-bold text-primary hover:text-primary/90 hover:scale-110"
+            >
               En savoir plus
             </Button>
           </div>

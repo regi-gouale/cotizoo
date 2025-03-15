@@ -6,8 +6,8 @@ export default function HomePage() {
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-r from-background to-primary/10 font-sans">
       <HeroSection />
-      <CtaSection />
       <FeaturesSection />
+      <CtaSection />
     </div>
   );
 }

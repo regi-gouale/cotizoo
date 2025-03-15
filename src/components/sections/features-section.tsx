@@ -4,7 +4,7 @@ export function FeaturesSection() {
   return (
     <section className="w-full px-4" id="features">
       <div className="container mx-auto flex flex-col items-center text-center gap-y-10 justify-center my-12">
-        <h2 className="text-2xl font-bold mb-6 font-title">
+        <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-6 font-title">
           Notre application révolutionnaire vous offre tout ce dont vous avez
           besoin :
         </h2>
