@@ -1,14 +1,15 @@
+"use client";
+
 import { GradientBackground } from "@/components/layout/gradient-background";
 import { GridBackground } from "@/components/layout/grid-background";
 import { CircleSvg } from "@/components/svg/circle-svg";
-import { CtaButtons } from "./cta-buttons";
+import { Button } from "../ui/button";
+import { SignupModal } from "../signup/signup-modal";
 
 export function HeroSection() {
   return (
     <div className="relative isolate flex flex-col">
-      <GridBackground />
-      <GradientBackground />
-      <section className="w-full px-4" id="hero">
+      <main className="w-full px-4" id="hero">
         <div className="container mx-auto flex flex-col items-center text-center gap-y-10 h-[calc(100vh-4rem)] justify-center">
           {/* Main Title with Image */}
           <div className="flex items-center gap-y-6 md:gap-y-8">
@@ -33,8 +34,20 @@ export function HeroSection() {
           </p>
 
           {/* Call To Action Button */}
-          <CtaButtons />
-
+          <div className="flex flex-col gap-4 md:flex-row md:gap-8">
+            <Button
+              asChild
+              className="hover:shadow-md hover:translate-y-[-2px] hover:scale-110"
+            >
+              <SignupModal
+                className="bg-primary text-primary-foreground hover:bg-primary/90"
+                triggerText="Je réjoins la communauté"
+              />
+            </Button>
+            <Button variant="ghost" className="font-bold">
+              En savoir plus
+            </Button>
+          </div>
           {/* Brand */}
           <div className="mb-4 gap-y-4">
             <p className="text-sm text-muted-foreground italic">
@@ -42,7 +55,7 @@ export function HeroSection() {
             </p>
           </div>
         </div>
-      </section>
+      </main>
     </div>
   );
 }

@@ -6,6 +6,8 @@ import type { Metadata } from "next";
 import { Lato, Montserrat, Rowdies } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
+import { GridBackground } from "@/components/layout/grid-background";
+import { GradientBackground } from "@/components/layout/gradient-background";
 
 export const metadata: Metadata = {
   title: "Cotizoo",
@@ -48,7 +50,11 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <div className="relative flex min-h-screen flex-col">
             <Header />
-            <main className="flex-1">{children}</main>
+            <main className="flex-1">
+              <GridBackground />
+              <GradientBackground />
+              {children}
+            </main>
             <Footer />
             <Toaster />
           </div>
