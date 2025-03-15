@@ -1,10 +1,8 @@
 "use client";
 
-import { GradientBackground } from "@/components/layout/gradient-background";
-import { GridBackground } from "@/components/layout/grid-background";
 import { CircleSvg } from "@/components/svg/circle-svg";
+import { SignupModal } from "../forms/cta-modal";
 import { Button } from "../ui/button";
-import { SignupModal } from "../signup/signup-modal";
 
 export function HeroSection() {
   return (

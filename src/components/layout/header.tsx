@@ -1,7 +1,7 @@
 "use client";
 
+import { SignupModal } from "@/components/forms/cta-modal";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
-import { SignupModal } from "@/components/signup/signup-modal";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,

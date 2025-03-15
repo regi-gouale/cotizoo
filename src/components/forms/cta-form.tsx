@@ -10,6 +10,7 @@ import {
   useZodForm,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -20,9 +21,12 @@ const CtaSchema = z.object({
 
 type CtaFormProps = {
   className?: string;
+  onSuccess?: () => void;
 };
 
 export function CtaForm(props: CtaFormProps) {
+  const { className, onSuccess } = props;
+
   const form = useZodForm({
     schema: CtaSchema,
     defaultValues: {
@@ -38,10 +42,14 @@ export function CtaForm(props: CtaFormProps) {
       toast.success("Votre inscription a bien été prise en compte !");
 
       // Nettoyer le formulaire après soumission réussie
+
       form.reset({
         firstName: "",
         email: "",
       });
+      if (onSuccess) {
+        onSuccess();
+      }
     } catch (error) {
       toast.error("Une erreur est survenue lors de l'inscription");
       console.error(error);
@@ -50,7 +58,7 @@ export function CtaForm(props: CtaFormProps) {
 
   return (
     <Form form={form} onSubmit={async (data) => onSubmit(data)}>
-      <div className="space-y-4">
+      <div className={cn("space-y-4", className)}>
         <div className="gap-y-4 text-left">
           <h3 className="font-semibold font-title text-xl text-center mb-4">
             🚀 Lancement imminent !
@@ -61,7 +69,7 @@ export function CtaForm(props: CtaFormProps) {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-3">
+        <div className="grid grid-cols-1 gap-4">
           <FormField
             control={form.control}
             name="firstName"
