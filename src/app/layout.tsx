@@ -1,6 +1,4 @@
 import { Footer } from "@/components/layout/footer";
-import { GradientBackground } from "@/components/layout/gradient-background";
-import { GridBackground } from "@/components/layout/grid-background";
 import { Header } from "@/components/layout/header";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/providers/theme-provider";
