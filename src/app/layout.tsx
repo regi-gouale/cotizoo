@@ -1,7 +1,8 @@
 import { Header } from "@/components/layout/header";
 import { cn } from "@/lib/utils";
+import { ThemeProvider } from "@/providers/theme-provider";
 import type { Metadata } from "next";
-import { Rowdies, Lato, Montserrat } from "next/font/google";
+import { Lato, Montserrat, Rowdies } from "next/font/google";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -42,10 +43,12 @@ export default function RootLayout({
           "min-h-screen bg-background font-sans antialiased",
         )}
       >
-        <div className="relative flex min-h-screen flex-col">
-          <Header />
-          <main className="flex-1">{children}</main>
-        </div>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <div className="relative flex min-h-screen flex-col">
+            <Header />
+            <main className="flex-1">{children}</main>
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );

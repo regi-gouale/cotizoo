@@ -1,5 +1,6 @@
 "use client";
 
+import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -9,7 +10,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import { MenuIcon, X } from "lucide-react";
+import { Mail, MenuIcon, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -84,11 +85,15 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-4">
+          <ThemeToggle className="hidden md:flex" />
           <Button
             asChild
             className="hidden md:flex transition-all duration-300 hover:shadow-md hover:translate-y-[-2px]"
           >
-            <Link href="#">Je m'inscris</Link>
+            <Link href="#">
+              <Mail className="size-5" />
+              Je m'inscris
+            </Link>
           </Button>
 
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
@@ -100,19 +105,20 @@ export function Header() {
                 className="transition-all duration-200 hover:bg-primary/10 active:scale-95"
               >
                 {isMobileMenuOpen ? (
-                  <X className="h-5 w-5" />
+                  <X className="size-5" />
                 ) : (
-                  <MenuIcon className="h-5 w-5" />
+                  <MenuIcon className="size-5" />
                 )}
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-full max-w-xs">
-              <SheetHeader>
+              <SheetHeader className="flex flex-row items-center gap-4 justify-between mt-4">
                 <SheetTitle className="text-left font-mono text-primary">
                   Cotizoo
                 </SheetTitle>
+                <ThemeToggle className="" />
               </SheetHeader>
-              <nav className="flex flex-col gap-4 mx-2 mt-8">
+              <nav className="flex flex-col gap-4 mx-2 mt-4">
                 {navigationItems.map((item) => (
                   <Link
                     key={item.href}
