@@ -111,8 +111,9 @@ export function Header() {
             </SheetTrigger>
             <SheetContent side="right" className="w-full max-w-xs">
               <SheetHeader className="flex flex-row items-center gap-4 justify-between mt-4">
-                <SheetTitle className="text-left font-mono text-primary">
-                  Cotizoo
+                <SheetTitle className="text-left font-mono text-primary flex items-center">
+                  cotiz
+                  <CoinsIcon className="ml-0.5 size-4 text-primary rotate-90" />
                 </SheetTitle>
                 <ThemeToggle className="text-primary" />
               </SheetHeader>

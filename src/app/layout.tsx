@@ -10,7 +10,7 @@ import { Toaster } from "sonner";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Cotizoo",
+  title: "Cotizoo | Accueil",
   description: "Bienvenue sur l'application Cotizoo",
 };
 
