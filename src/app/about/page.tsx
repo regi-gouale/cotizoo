@@ -3,7 +3,7 @@ import { CoinsIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-export function AboutPage() {
+export default function AboutPage() {
   return (
     <div className="container mx-auto px-4 py-16 font-sans">
       {/* Hero Section */}
@@ -223,5 +223,3 @@ export function AboutPage() {
     </div>
   );
 }
-
-export default AboutPage;
