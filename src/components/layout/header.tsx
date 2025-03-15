@@ -24,6 +24,7 @@ type NavigationItem = {
 const navigationItems: NavigationItem[] = [
   { label: "Accueil", href: "/" },
   { label: "Fonctionnalités", href: "/#features" },
+  { label: "À propos", href: "/about" },
 ];
 
 export function Header() {

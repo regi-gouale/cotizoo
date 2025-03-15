@@ -1,4 +1,6 @@
 import { Footer } from "@/components/layout/footer";
+import { GradientBackground } from "@/components/layout/gradient-background";
+import { GridBackground } from "@/components/layout/grid-background";
 import { Header } from "@/components/layout/header";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/providers/theme-provider";
@@ -6,8 +8,6 @@ import type { Metadata } from "next";
 import { Lato, Montserrat, Rowdies } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
-import { GridBackground } from "@/components/layout/grid-background";
-import { GradientBackground } from "@/components/layout/gradient-background";
 
 export const metadata: Metadata = {
   title: "Cotizoo",
@@ -49,12 +49,10 @@ export default function RootLayout({
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <div className="relative flex min-h-screen flex-col">
+            {/* <GridBackground /> */}
+            {/* <GradientBackground /> */}
             <Header />
-            <main className="flex-1">
-              <GridBackground />
-              <GradientBackground />
-              {children}
-            </main>
+            <main className="flex-1">{children}</main>
             <Footer />
             <Toaster />
           </div>

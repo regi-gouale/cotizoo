@@ -18,7 +18,7 @@ export function HeroSection() {
                 <CircleSvg className="absolute inset-0 fill-primary" />
               </span>
               , avec une solution{" "}
-              <span className="underline font-extrabold text-primary bg-gradient-to-b from-muted/50 to-muted px-2 pb-0.5 rounded-md">
+              <span className="underline font-extrabold text-primary px-2 pb-0.5 rounded-md">
                 tout-en-un
               </span>
               , sécurisée et intuitive.
@@ -45,8 +45,9 @@ export function HeroSection() {
             <Button
               variant="ghost"
               className="font-bold text-primary hover:text-primary/90 hover:scale-110"
+              asChild
             >
-              En savoir plus
+              <a href="/about">En savoir plus</a>
             </Button>
           </div>
           {/* Brand */}
