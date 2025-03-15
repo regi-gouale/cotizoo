@@ -1,6 +1,7 @@
 "use client";
 
 import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { SignupModal } from "@/components/signup/signup-modal";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -10,7 +11,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import { Mail, MenuIcon, X } from "lucide-react";
+import { MenuIcon, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -23,8 +24,6 @@ type NavigationItem = {
 const navigationItems: NavigationItem[] = [
   { label: "Accueil", href: "/" },
   { label: "Fonctionnalités", href: "/#features" },
-  { label: "Tarifs", href: "/#pricing" },
-  { label: "À propos", href: "/#about" },
 ];
 
 export function Header() {
@@ -90,10 +89,7 @@ export function Header() {
             asChild
             className="hidden md:flex transition-all duration-300 hover:shadow-md hover:translate-y-[-2px]"
           >
-            <Link href="#">
-              <Mail className="size-5" />
-              Je m'inscris
-            </Link>
+            <SignupModal className="bg-primary text-primary-foreground hover:bg-primary/90" />
           </Button>
 
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
@@ -135,14 +131,16 @@ export function Header() {
                     {item.label}
                   </Link>
                 ))}
-                <Button
+
+                <SignupModal className="bg-primary text-primary-foreground" />
+                {/* <Button
                   asChild
                   className="mt-6 w-full transition-all duration-300 hover:shadow-md hover:translate-y-[-2px]"
                 >
                   <Link href="#" onClick={() => setIsMobileMenuOpen(false)}>
                     Je m'inscris
                   </Link>
-                </Button>
+                </Button> */}
               </nav>
             </SheetContent>
           </Sheet>

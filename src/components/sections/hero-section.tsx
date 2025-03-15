@@ -1,7 +1,7 @@
-import { CircleSvg } from "@/components/svg/circle-svg";
-import { Button } from "@/components/ui/button";
-import { GridBackground } from "@/components/layout/grid-background";
 import { GradientBackground } from "@/components/layout/gradient-background";
+import { GridBackground } from "@/components/layout/grid-background";
+import { CircleSvg } from "@/components/svg/circle-svg";
+import { CtaButtons } from "./cta-buttons";
 
 export function HeroSection() {
   return (
@@ -33,17 +33,7 @@ export function HeroSection() {
           </p>
 
           {/* Call To Action Button */}
-          <div className="flex gap-x-4">
-            <Button className="bg-primary hover:bg-primary/90">
-              Réserver mon accès
-            </Button>
-            <Button
-              variant="ghost"
-              className="text-primary hover:text-primary/90"
-            >
-              En savoir plus
-            </Button>
-          </div>
+          <CtaButtons />
 
           {/* Brand */}
           <div className="mb-4 gap-y-4">
