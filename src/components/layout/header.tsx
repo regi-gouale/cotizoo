@@ -11,7 +11,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import { MenuIcon, X } from "lucide-react";
+import { CoinsIcon, MenuIcon, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -58,8 +58,9 @@ export function Header() {
       <div className="container flex h-16 items-center justify-between mx-auto gap-x-2">
         <div className="flex items-center gap-6">
           <Link href="/" className="flex items-center gap-2 ml-2 group">
-            <span className="text-3xl font-bold text-primary font-mono transition-all duration-300 group-hover:scale-105 group-hover:text-primary/90">
-              cotizoo
+            <span className="text-3xl font-bold text-primary font-mono transition-all duration-300 group-hover:scale-105 group-hover:text-primary/90 flex">
+              cotiz
+              <CoinsIcon className="size-8 text-primary" />
             </span>
           </Link>
         </div>
