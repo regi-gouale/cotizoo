@@ -36,7 +36,7 @@ export function Header() {
         isScrolled && "shadow-sm",
       )}
     >
-      <div className="container flex h-16 items-center justify-between mx-auto gap-x-2">
+      <div className="container flex h-16 items-center justify-between mx-auto gap-x-2 max-w-6xl px-4">
         <div className="flex items-center gap-6">
           <BrandLogo />
         </div>
