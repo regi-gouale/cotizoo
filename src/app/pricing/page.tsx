@@ -15,7 +15,7 @@ export const metadata = {
 
 export default async function PricingPage() {
   return (
-    <div className="container py-12 space-y-8 font-sans">
+    <div className="flex flex-col min-h-screen bg-gradient-to-r from-background to-primary/10 font-sans">
       <div className="text-center space-y-3 mb-8">
         <h1 className="text-3xl md:text-4xl font-bold font-title">
           Tarification simple et transparente
@@ -26,7 +26,7 @@ export default async function PricingPage() {
         </p>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto items-center justify-center">
+      <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto items-center justify-center mb-8">
         <Card>
           <CardHeader className="text-center">
             <CardTitle className="font-semibold font-title">
