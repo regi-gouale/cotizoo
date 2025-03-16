@@ -20,8 +20,9 @@ export type NavigationItem = {
 
 // Déplaçons les éléments de navigation dans une constante exportée
 export const navigationItems: NavigationItem[] = [
-  { label: "Accueil", href: "/" },
+  // { label: "Accueil", href: "/" },
   { label: "Fonctionnalités", href: "/#features" },
+  { label: "Tarification", href: "/pricing" },
   { label: "À propos", href: "/about" },
 ];
 
