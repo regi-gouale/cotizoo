@@ -20,13 +20,13 @@ export default async function PricingPage() {
         <h1 className="text-3xl md:text-4xl font-bold font-title">
           Tarification simple et transparente
         </h1>
-        <p className="text-muted-foreground max-w-2xl mx-auto">
+        <p className="text-muted-foreground max-w-2xl mx-auto px-2">
           Nous proposons une tarification claire basée sur le montant total de
           votre collecte.
         </p>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+      <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto items-center justify-center">
         <Card>
           <CardHeader className="text-center">
             <CardTitle className="font-semibold font-title">

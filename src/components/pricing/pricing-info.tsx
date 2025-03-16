@@ -32,53 +32,55 @@ export function PricingInfo(props: {}) {
         <h2 className="text-2xl font-bold text-center font-title">
           Calcul des frais
         </h2>
-        <p className="text-muted-foreground text-center max-w-2xl mx-auto">
+        <p className="text-muted-foreground text-center max-w-2xl mx-auto px-2">
           Utilisez notre calculateur pour estimer les frais de votre collecte.
         </p>
 
-        <Card className="max-w-md mx-auto">
-          <CardHeader>
-            <CardTitle>Simulateur de frais</CardTitle>
-            <CardDescription>
-              Entrez le montant de votre collecte
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="amount">Montant de la collecte (€)</Label>
-              <Input
-                id="amount"
-                type="number"
-                min="1"
-                value={amount}
-                onChange={(e) => setAmount(Number(e.target.value))}
-              />
-            </div>
+        <div className="flex justify-center">
+          <Card className="max-w-md mx-auto">
+            <CardHeader>
+              <CardTitle>Simulateur de frais</CardTitle>
+              <CardDescription>
+                Entrez le montant de votre collecte
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="amount">Montant de la collecte (€)</Label>
+                <Input
+                  id="amount"
+                  type="number"
+                  min="1"
+                  value={amount}
+                  onChange={(e) => setAmount(Number(e.target.value))}
+                />
+              </div>
 
-            <div className="pt-4 space-y-2">
-              <div className="flex justify-between">
-                <span>Montant de la collecte:</span>
-                <span className="font-medium">{amount.toFixed(2)}€</span>
+              <div className="pt-4 space-y-2">
+                <div className="flex justify-between">
+                  <span>Montant de la collecte:</span>
+                  <span className="font-medium">{amount.toFixed(2)}€</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Frais:</span>
+                  <span className="font-medium">
+                    {fee.toFixed(2)}€ ({percent.toFixed(2)}%)
+                  </span>
+                </div>
+                <Separator className="my-2" />
+                <div className="flex justify-between font-bold">
+                  <span>Montant net:</span>
+                  <span className="font-title text-primary">
+                    {(amount - fee).toFixed(2)}€
+                  </span>
+                </div>
               </div>
-              <div className="flex justify-between">
-                <span>Frais:</span>
-                <span className="font-medium">
-                  {fee.toFixed(2)}€ ({percent.toFixed(2)}%)
-                </span>
-              </div>
-              <Separator className="my-2" />
-              <div className="flex justify-between font-bold">
-                <span>Montant net:</span>
-                <span className="font-title text-primary">
-                  {(amount - fee).toFixed(2)}€
-                </span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </div>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-6 flex flex-col items-center">
         <h2 className="text-2xl font-bold text-center font-title">
           Exemples de calcul
         </h2>

@@ -9,11 +9,7 @@ export default function AboutPage() {
       {/* Hero Section */}
       <div className="mb-20 text-center">
         <h1 className="text-4xl md:text-5xl font-bold mb-6 font-title flex items-center justify-center gap-2">
-          À propos de{" "}
-          <span className="flex items-center gap-1 font-mono">
-            <span>cotiz</span>
-            <CoinsIcon className="size-12 rotate-90" />
-          </span>{" "}
+          À propos
         </h1>
         <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
           Découvrez comment notre plateforme révolutionne la gestion des
