@@ -10,7 +10,7 @@ export default function SignupPage() {
           Créer votre compte
         </h1>
         <p className="text-muted-foreground mb-8 text-center">
-          Rejoignez Cotizoo et commencez à gérer vos tontines simplement et en
+          Rejoignez cotizoo et commencez à gérer vos tontines simplement et en
           toute sécurité.
         </p>
 

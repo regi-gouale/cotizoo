@@ -25,7 +25,7 @@ export default function AboutPage() {
               Notre mission
             </h2>
             <p className="text-lg mb-4">
-              Chez Cotizoo, nous croyons au pouvoir de l'épargne collective et
+              Chez cotizoo, nous croyons au pouvoir de l'épargne collective et
               de l'entraide financière. Notre mission est de démocratiser
               l'accès aux tontines en proposant une solution numérique qui
               respecte les traditions tout en apportant modernité et sécurité.
@@ -99,7 +99,7 @@ export default function AboutPage() {
       {/* Avantages */}
       <section className="mb-20">
         <h2 className="text-3xl font-bold mb-10 text-center font-title">
-          Les avantages de Cotizoo
+          Les avantages de cotizoo
         </h2>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
@@ -151,7 +151,7 @@ export default function AboutPage() {
           Prêt à moderniser votre tontine ?
         </h2>
         <p className="text-xl mb-8 max-w-2xl mx-auto">
-          Rejoignez les milliers d'utilisateurs qui font confiance à Cotizoo
+          Rejoignez les milliers d'utilisateurs qui font confiance à cotizoo
           pour gérer leurs tontines facilement et en toute sécurité.
         </p>
         <Button

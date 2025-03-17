@@ -8,8 +8,8 @@ import { Toaster } from "sonner";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Cotizoo | Accueil",
-  description: "Bienvenue sur l'application Cotizoo",
+  title: "cotizoo | Accueil",
+  description: "Bienvenue sur l'application cotizoo",
 };
 
 const lato = Lato({

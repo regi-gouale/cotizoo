@@ -25,7 +25,7 @@ export function PricingInfo(props: {}) {
   const { fee, percent } = calculateFee(amount);
 
   return (
-    <div className="space-y-8 fonnt-sans">
+    <div className="space-y-8 fonnt-sans w-full">
       <Separator />
 
       <div className="space-y-6">
@@ -37,9 +37,11 @@ export function PricingInfo(props: {}) {
         </p>
 
         <div className="flex justify-center">
-          <Card className="max-w-md mx-auto">
+          <Card className="max-w-md mx-auto w-full">
             <CardHeader>
-              <CardTitle>Simulateur de frais</CardTitle>
+              <CardTitle className="font-title text-xl">
+                Simulateur de frais
+              </CardTitle>
               <CardDescription>
                 Entrez le montant de votre collecte
               </CardDescription>
@@ -79,16 +81,18 @@ export function PricingInfo(props: {}) {
           </Card>
         </div>
       </div>
-
-      <div className="space-y-6 flex flex-col items-center">
+      <Separator />
+      <div className="space-y-6 flex flex-col items-center w-full">
         <h2 className="text-2xl font-bold text-center font-title">
           Exemples de calcul
         </h2>
 
-        <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto w-full">
           <Card>
             <CardHeader>
-              <CardTitle>Exemple 1: Petite collecte</CardTitle>
+              <CardTitle className="font-title text-xl">
+                Exemple 1: Petite collecte
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
@@ -111,7 +115,9 @@ export function PricingInfo(props: {}) {
 
           <Card>
             <CardHeader>
-              <CardTitle>Exemple 2: Grande collecte</CardTitle>
+              <CardTitle className="font-title text-xl">
+                Exemple 2: Grande collecte
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
