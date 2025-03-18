@@ -1,4 +1,5 @@
 import { SignUpForm } from "@/components/auth/sign-up-form";
+import { SocialAuthButtons } from "@/components/auth/social-auth-buttons";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -18,7 +19,9 @@ export default async function SignupPage() {
         <h1 className="text-3xl font-bold mb-8 text-center font-title">
           Créez votre compte
         </h1>
-        <SignUpForm />
+        <div className="w-full max-w-sm">
+          <SignUpForm />
+        </div>
       </div>
     </div>
   );

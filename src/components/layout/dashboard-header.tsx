@@ -8,15 +8,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ButtonLoading } from "@/components/ui/loading";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
-import { toast } from "sonner";
+import { redirect, useRouter } from "next/navigation";
 import { useState } from "react";
-import { ButtonLoading } from "@/components/ui/loading";
+import { toast } from "sonner";
 
 export function DashboardHeader(props: {
   user: { name?: string | null; email?: string | null };
 }) {
+  const router = useRouter();
   const { user } = props;
   const displayName = user.name || user.email?.split("@")[0] || "Utilisateur";
 
@@ -25,7 +27,13 @@ export function DashboardHeader(props: {
   const handleSignOut = async () => {
     setIsSigningOut(true);
     try {
-      await authClient.signOut();
+      await authClient.signOut({
+        fetchOptions: {
+          onSuccess: () => {
+            router.push("/auth/signin"); // redirect to login page
+          },
+        },
+      });
       toast.success("Déconnexion réussie");
     } catch (error) {
       toast.error("Erreur lors de la déconnexion");

@@ -26,6 +26,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
+import { SocialAuthButtons } from "./social-auth-buttons";
 
 const SignUpSchema = z.object({
   name: z.string().min(1, "Nom requis"),
@@ -84,12 +85,15 @@ export function SignUpForm() {
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle>Créer un compte</CardTitle>
+        <CardTitle className="font-title text-center">
+          Créer un compte
+        </CardTitle>
         <CardDescription>
           Inscrivez-vous pour accéder à votre tableau de bord
         </CardDescription>
       </CardHeader>
       <CardContent>
+        <SocialAuthButtons />
         <Form form={form} onSubmit={async (values) => await onSubmit(values)}>
           <div className="space-y-4">
             <FormField
