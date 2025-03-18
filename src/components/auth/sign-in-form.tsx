@@ -57,6 +57,7 @@ export function SignInForm() {
           },
           onSuccess: () => {
             toast.success("Connexion réussie!");
+            // redirect("/dashboard");
           },
           onError: (ctx) => {
             toast.error(ctx.error.message || "Identifiants incorrects");
@@ -64,6 +65,7 @@ export function SignInForm() {
         },
       );
     } catch (error) {
+      console.error(error);
       toast.error("Une erreur est survenue lors de la connexion");
     } finally {
       setIsLoading(false);

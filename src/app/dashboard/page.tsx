@@ -1,15 +1,15 @@
 import { DashboardStats } from "@/components/dashboard/dashboard-stats";
 import { DashboardWelcome } from "@/components/dashboard/dashboard-welcome";
-import { authClient } from "@/lib/auth-client";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 export default async function DashboardPage() {
-  const { data: session, error } = await authClient.getSession();
+  const session = await auth.api.getSession({ headers: await headers() });
 
-  if (error) {
-    console.error("Error fetching session:", error);
-    redirect("/auth/signin");
-  } else if (!session) {
+  console.log("session", session);
+  if (!session) {
+    console.error("No session found, redirecting to signin");
     redirect("/auth/signin");
   }
 

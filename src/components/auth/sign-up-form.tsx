@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
+
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -65,6 +66,7 @@ export function SignUpForm() {
               "Inscription réussie! Veuillez vérifier votre email.",
             );
             form.reset();
+            // redirect("/dashboard");
           },
           onError: (ctx) => {
             toast.error(ctx.error.message);

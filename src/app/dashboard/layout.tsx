@@ -1,5 +1,6 @@
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
-import { authClient } from "@/lib/auth-client";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 export default async function DashboardLayout({
@@ -7,18 +8,17 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { data: session, error } = await authClient.getSession();
+  const session = await auth.api.getSession({ headers: await headers() });
 
-  if (error) {
-    console.error("Error fetching session:", error);
-    redirect("/auth/signin");
-  } else if (!session) {
+  if (!session) {
     redirect("/auth/signin");
   }
 
+  const user = session.user || null;
+
   return (
     <div className="min-h-screen flex flex-col">
-      <DashboardHeader user={session.user} />
+      <DashboardHeader user={user} />
       <main className="flex-1 py-6">{children}</main>
     </div>
   );
