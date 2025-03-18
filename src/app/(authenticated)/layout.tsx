@@ -1,7 +1,18 @@
-import { DashboardHeader } from "@/components/dashboard/dashboard-header";
+import { DashboardHeader } from "@/components/layout/dashboard-header";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+
+export const metadata = {
+  title: {
+    default: "Tableau de bord - cotizoo",
+    template: "%s | cotizoo",
+  },
+  description: "Tableau de bord de votre compte cotizoo.",
+  keywords: ["cotizoo", "tableau de bord", "compte"],
+  authors: [{ name: "Équipe Cotizoo" }],
+  creator: "Cotizoo",
+};
 
 export default async function DashboardLayout({
   children,
@@ -17,7 +28,7 @@ export default async function DashboardLayout({
   const user = session.user || null;
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="flex flex-col w-full mx-auto min-h-[calc(100vh-4rem)]">
       <DashboardHeader user={user} />
       <main className="flex-1 py-6">{children}</main>
     </div>

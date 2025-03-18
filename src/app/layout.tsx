@@ -1,5 +1,4 @@
 import { Footer } from "@/components/layout/footer";
-import { Header } from "@/components/layout/header";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/providers/theme-provider";
 import type { Metadata } from "next";
@@ -47,10 +46,8 @@ export default function RootLayout({
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <div className="relative flex min-h-screen flex-col">
-            {/* <GridBackground /> */}
-            {/* <GradientBackground /> */}
-            <Header />
-            <main className="flex-1">{children}</main>
+            {/* <Header /> */}
+            <main className="flex w-full mx-auto">{children}</main>
             <Footer />
             <Toaster />
           </div>
