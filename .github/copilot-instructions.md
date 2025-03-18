@@ -236,7 +236,7 @@ export const POST = orgRoute
   .params(
     z.object({
       orgId: z.string(),
-    })
+    }),
   )
   // Body params = { name: "John" }
   .body(z.object({ name: z.string() }))
@@ -256,23 +256,33 @@ export const POST = orgRoute
   });
 ```
 
-- Always create org related routes insides `/api/org/[orgId]/*`
-- Always use `orgRoute` to create safe routes inside `/api/org/[orgId]/*`
-- In general, you can use `authRoute` to create safe routes that is NOT related to orgs.
+<!-- - Always create org related routes insides `/api/org/[orgId]/*` -->
+<!-- - Always use `orgRoute` to create safe routes inside `/api/org/[orgId]/*` -->
+<!-- - In general, you can use `authRoute` to create safe routes that is NOT related to orgs. -->
 
 ## Auth
 
 To get the current user, you must use `auth` function.
 
 ```ts
-import { auth, requiredAuth } from "@/lib/auth/helper";
+import { authClient } from "@/lib/auth-client";
 
-const user = await auth();
-// Or required user
-const user = await requiredAuth();
+export function User(){
+
+    const {
+        data: session,
+        isPending, //loading state
+        error, //error object
+        refetch //refetch the session
+    } = authClient.useSession()
+
+    return (
+        //...
+    )
+}
 ```
 
-## Org
+<!-- ## Org
 
 - You muse always use organisation for ressources. Everything must be linked to an organisation, not a user.
 
@@ -282,7 +292,7 @@ const user = await requiredAuth();
 import { getCurrentOrgCache } from "@/lib/react/cache";
 
 const org = await getCurrentOrgCache();
-```
+``` -->
 
 ## Commit
 
