@@ -7,9 +7,7 @@ import { redirect } from "next/navigation";
 export default async function DashboardPage() {
   const session = await auth.api.getSession({ headers: await headers() });
 
-  console.log("session", session);
   if (!session) {
-    console.error("No session found, redirecting to signin");
     redirect("/auth/signin");
   }
 
