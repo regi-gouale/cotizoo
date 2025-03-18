@@ -10,8 +10,10 @@ import {
   useZodForm,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { ButtonLoading } from "@/components/ui/loading";
 import { cn } from "@/lib/utils";
 import { saveLead } from "@/server/actions/lead.action";
+import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -27,6 +29,7 @@ type CtaFormProps = {
 
 export function CtaForm(props: CtaFormProps) {
   const { className, onSuccess } = props;
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useZodForm({
     schema: CtaSchema,
@@ -37,6 +40,7 @@ export function CtaForm(props: CtaFormProps) {
   });
 
   const onSubmit = async (data: z.infer<typeof CtaSchema>) => {
+    setIsLoading(true);
     try {
       const result = await saveLead(data);
 
@@ -62,6 +66,8 @@ export function CtaForm(props: CtaFormProps) {
     } catch (error) {
       toast.error("Une erreur est survenue lors de l'inscription");
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -109,8 +115,15 @@ export function CtaForm(props: CtaFormProps) {
             )}
           />
 
-          <Button type="submit" className="w-full">
-            Je m'inscris
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? (
+              <>
+                <ButtonLoading className="mr-2" />
+                Envoi en cours...
+              </>
+            ) : (
+              "Commencer maintenant"
+            )}
           </Button>
         </div>
 

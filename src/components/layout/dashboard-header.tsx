@@ -11,6 +11,8 @@ import {
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { toast } from "sonner";
+import { useState } from "react";
+import { ButtonLoading } from "@/components/ui/loading";
 
 export function DashboardHeader(props: {
   user: { name?: string | null; email?: string | null };
@@ -18,12 +20,17 @@ export function DashboardHeader(props: {
   const { user } = props;
   const displayName = user.name || user.email?.split("@")[0] || "Utilisateur";
 
+  const [isSigningOut, setIsSigningOut] = useState(false);
+
   const handleSignOut = async () => {
+    setIsSigningOut(true);
     try {
       await authClient.signOut();
       toast.success("Déconnexion réussie");
     } catch (error) {
       toast.error("Erreur lors de la déconnexion");
+    } finally {
+      setIsSigningOut(false);
     }
   };
 
@@ -86,7 +93,20 @@ export function DashboardHeader(props: {
               onClick={handleSignOut}
               className="cursor-pointer text-red-600 focus:text-red-600"
             >
-              Se déconnecter
+              <Button
+                onClick={handleSignOut}
+                variant="ghost"
+                disabled={isSigningOut}
+              >
+                {isSigningOut ? (
+                  <>
+                    <ButtonLoading className="mr-2" />
+                    Déconnexion...
+                  </>
+                ) : (
+                  "Déconnexion"
+                )}
+              </Button>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

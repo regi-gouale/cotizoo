@@ -19,6 +19,7 @@ import {
   useZodForm,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { ButtonLoading } from "@/components/ui/loading";
 import { authClient } from "@/lib/auth-client";
 
 import Link from "next/link";
@@ -137,7 +138,14 @@ export function SignUpForm() {
           </div>
           <CardFooter className="flex justify-end pt-6 px-0">
             <Button type="submit" disabled={isLoading}>
-              {isLoading ? "Inscription en cours..." : "S'inscrire"}
+              {isLoading ? (
+                <>
+                  <ButtonLoading className="mr-2" />
+                  Inscription en cours...
+                </>
+              ) : (
+                "S'inscrire"
+              )}
             </Button>
           </CardFooter>
         </Form>
