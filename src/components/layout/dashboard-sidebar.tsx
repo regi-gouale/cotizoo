@@ -9,7 +9,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { authClient } from "@/lib/auth-client";
 import {
@@ -23,7 +22,7 @@ import {
   UsersIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ComponentProps } from "react";
 import { toast } from "sonner";
 
@@ -67,6 +66,7 @@ const sidebarNavItems: SidebarNavItem[] = [
 ];
 
 export function DashboardSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
+  const router = useRouter();
   const pathname = usePathname();
   const { signOut } = authClient;
 
@@ -74,6 +74,7 @@ export function DashboardSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
     try {
       await signOut();
       toast.success("Déconnexion réussie");
+      router.push("/auth/signin");
     } catch (error) {
       toast.error("Erreur lors de la déconnexion");
     }

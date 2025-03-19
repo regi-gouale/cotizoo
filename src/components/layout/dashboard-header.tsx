@@ -1,5 +1,6 @@
 "use client";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -18,7 +19,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 export function DashboardHeader(props: {
-  user: { name?: string | null; email?: string | null };
+  user: { name?: string | null; email?: string | null; image?: string | null };
 }) {
   const router = useRouter();
   const { user } = props;
@@ -124,14 +125,14 @@ export function DashboardHeader(props: {
           {/* User dropdown menu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                className="relative h-8 w-8 rounded-full flex items-center justify-center bg-primary/10"
-              >
-                <span className="font-medium text-sm">
+              <Avatar className="h-8 w-8 cursor-pointer bg-primary/10">
+                {user.image ? (
+                  <AvatarImage src={user.image} alt={displayName} />
+                ) : null}
+                <AvatarFallback className="bg-primary/10 text-primary">
                   {displayName.charAt(0).toUpperCase()}
-                </span>
-              </Button>
+                </AvatarFallback>
+              </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
               <div className="px-2 py-1.5 text-sm font-medium">
