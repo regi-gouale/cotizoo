@@ -19,11 +19,13 @@ import {
   useZodForm,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { ButtonLoading } from "@/components/ui/loading";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
+import { SocialAuthButtons } from "./social-auth-buttons";
 
 const SignInSchema = z.object({
   email: z.string().email("Email invalide"),
@@ -75,12 +77,14 @@ export function SignInForm() {
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
+        <CardTitle className="font-title text-center">Se connecter</CardTitle>
         <CardTitle>Se connecter</CardTitle>
         <CardDescription>
           Connectez-vous pour accéder à votre tableau de bord
         </CardDescription>
       </CardHeader>
       <CardContent>
+        <SocialAuthButtons />
         <Form form={form} onSubmit={async (values) => await onSubmit(values)}>
           <div className="space-y-4">
             <FormField
@@ -126,6 +130,14 @@ export function SignInForm() {
 
           <CardFooter className="flex justify-end pt-6 px-0">
             <Button type="submit" disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <ButtonLoading className="mr-2" />
+                  Connexion en cours...
+                </>
+              ) : (
+                "Se connecter"
+              )}
               {isLoading ? "Connexion en cours..." : "Se connecter"}
             </Button>
           </CardFooter>
