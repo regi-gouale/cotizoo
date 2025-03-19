@@ -121,7 +121,7 @@ export function SignInForm() {
 
           <div className="mt-4 text-sm">
             <Link
-              href="/auth/reset-password"
+              href="/auth/forgot-password"
               className="text-primary hover:underline"
             >
               Mot de passe oublié?
