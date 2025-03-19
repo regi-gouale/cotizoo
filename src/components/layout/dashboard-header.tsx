@@ -9,13 +9,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ButtonLoading } from "@/components/ui/loading";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 import { authClient } from "@/lib/auth-client";
 import { BellIcon, CoinsIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { MobileSidebar } from "./mobile-sidebar";
 
 export function DashboardHeader(props: {
   user: { name?: string | null; email?: string | null };
@@ -30,14 +30,9 @@ export function DashboardHeader(props: {
   const handleSignOut = async () => {
     setIsSigningOut(true);
     try {
-      await authClient.signOut({
-        fetchOptions: {
-          onSuccess: () => {
-            router.push("/auth/signin");
-          },
-        },
-      });
+      await authClient.signOut();
       toast.success("Déconnexion réussie");
+      router.push("/auth/signin");
     } catch (error) {
       toast.error("Erreur lors de la déconnexion");
     } finally {
@@ -48,15 +43,20 @@ export function DashboardHeader(props: {
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <MobileSidebar />
-          <Link
-            href="/dashboard"
-            className="font-bold text-xl font-mono flex items-center text-primary"
-          >
-            cotiz
-            <CoinsIcon className="ml-0.5 size-4 text-primary rotate-90" />
-          </Link>
+        <div className="flex items-center gap-4">
+          <SidebarTrigger className="-ml-1" />
+          <div className="flex items-center gap-3">
+            <div className="md:hidden">
+              <SidebarTrigger />
+            </div>
+            <Link
+              href="/dashboard"
+              className="font-bold text-xl font-mono flex items-center text-primary"
+            >
+              cotiz
+              <CoinsIcon className="ml-0.5 size-4 text-primary rotate-90" />
+            </Link>
+          </div>
         </div>
 
         <div className="flex items-center gap-2">

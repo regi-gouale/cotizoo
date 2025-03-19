@@ -9,12 +9,12 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { authClient } from "@/lib/auth-client";
 import {
   BellIcon,
+  CoinsIcon,
   CreditCardIcon,
   HomeIcon,
   LayoutDashboardIcon,
@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ComponentProps } from "react";
 import { toast } from "sonner";
 
 type SidebarNavItem = {
@@ -65,7 +66,7 @@ const sidebarNavItems: SidebarNavItem[] = [
   },
 ];
 
-export function DashboardSidebar() {
+export function DashboardSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
   const { signOut } = authClient;
 
@@ -79,46 +80,45 @@ export function DashboardSidebar() {
   };
 
   return (
-    <SidebarProvider defaultOpen={true}>
-      <Sidebar>
-        <SidebarHeader className="flex h-14 items-center border-b px-4">
-          <Link href="/dashboard" className="flex items-center gap-2">
-            <span className="text-xl font-bold text-primary font-mono">
-              cotizoo
-            </span>
-          </Link>
-          <SidebarTrigger className="ml-auto" />
-        </SidebarHeader>
-        <SidebarContent>
-          <SidebarMenu>
-            {sidebarNavItems.map((item) => (
-              <SidebarMenuItem key={item.href}>
-                <SidebarMenuButton
-                  asChild
-                  isActive={pathname === item.href}
-                  size="lg"
-                  tooltip={item.label}
-                >
-                  <Link href={item.href} className="flex w-full gap-2">
-                    {item.icon}
-                    <span>{item.label}</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-        </SidebarContent>
-        <SidebarFooter>
-          <Button
-            variant="ghost"
-            className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-100/20"
-            onClick={handleSignOut}
-          >
-            <LogOutIcon className="size-4 mr-2" />
-            Déconnexion
-          </Button>
-        </SidebarFooter>
-      </Sidebar>
-    </SidebarProvider>
+    <Sidebar variant="floating" {...props}>
+      <SidebarHeader className="flex h-14 items-center border-b px-4">
+        <Link href="/dashboard" className="flex items-center gap-2">
+          <span className="text-xl font-bold text-primary font-mono flex items-center">
+            cotiz
+            <CoinsIcon className="ml-0.5 size-4 text-primary rotate-90" />
+          </span>
+        </Link>
+        {/* <SidebarTrigger className="ml-auto" /> */}
+      </SidebarHeader>
+      <SidebarContent>
+        <SidebarMenu className="flex-1 ml-4">
+          {sidebarNavItems.map((item) => (
+            <SidebarMenuItem key={item.href}>
+              <SidebarMenuButton
+                asChild
+                isActive={pathname === item.href}
+                size="lg"
+                tooltip={item.label}
+              >
+                <Link href={item.href} className="flex w-full gap-4">
+                  {item.icon}
+                  <span>{item.label}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
+      </SidebarContent>
+      <SidebarFooter>
+        <Button
+          variant="destructive"
+          className="w-full justify-center"
+          onClick={handleSignOut}
+        >
+          <LogOutIcon className="size-4 mr-2" />
+          Déconnexion
+        </Button>
+      </SidebarFooter>
+    </Sidebar>
   );
 }

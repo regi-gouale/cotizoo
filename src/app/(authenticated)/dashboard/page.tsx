@@ -1,4 +1,3 @@
-import { DashboardStats } from "@/components/dashboard/dashboard-stats";
 import { DashboardWelcome } from "@/components/dashboard/dashboard-welcome";
 import { Button } from "@/components/ui/button";
 import {
@@ -111,7 +110,7 @@ export default async function DashboardPage() {
         </Card>
       </div>
 
-      <DashboardStats />
+      {/* <DashboardStats /> */}
     </div>
   );
 }
