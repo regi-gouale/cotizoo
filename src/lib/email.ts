@@ -7,7 +7,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export const emailConfig = {
   fromEmail: process.env.EMAIL_FROM || "no-reply@cotizoo.com",
   replyToEmail: process.env.EMAIL_REPLY_TO || "support@cotizoo.com",
-  siteName: process.env.SITE_NAME || "Cotizoo",
+  siteName: process.env.SITE_NAME || "cotizoo",
   siteUrl: process.env.NEXT_PUBLIC_APP_URL || "https://cotizoo.com",
 };
 
