@@ -1,11 +1,12 @@
 ## Context
 
-You are an AI embed in a project that use :
+You are an AI embed in a project that use:
 
 - TypeScript
 - Node.js with Next.js
 - React
 - TailwindCSS and Shadcn UI
+- Better-auth for authentication
 
 ## Style and Structure
 
@@ -25,7 +26,7 @@ You are an AI embed in a project that use :
 - Avoid enums; use maps instead.
 - Use functional components with TypeScript types.
 
-## Synthax and Formatting
+## Syntax and Formatting
 
 - Avoid unnecessary curly braces in conditionals; use concise syntax for simple statements.
 - Write declarative JSX.
@@ -57,9 +58,9 @@ You are an AI embed in a project that use :
 - Limit 'use client': Favor server components and Next.js SSR for data fetching or state management.
 - Use 'use client' only for Web API access in small components.
 
-## PostgreSql
+## PostgreSQL
 
-- Use valid PostgresQL syntax with guillemet for table and column names.
+- Use valid PostgreSQL syntax with guillemet for table and column names.
 
 ## Next 15 and React 19
 
@@ -87,7 +88,7 @@ export default async function Page() {
 - You always use `export function` without "default" or named export.
 - You always use an object "props" as the first argument of your component, and add type directly in the object.
 
-Example :
+Example:
 
 ```tsx
 export function MyComponent(props: { prop1: string; prop2: number }) {
@@ -97,7 +98,7 @@ export function MyComponent(props: { prop1: string; prop2: number }) {
 
 ## Toast Example
 
-If you need to use "toast", use the following example :
+If you need to use "toast", use the following example:
 
 ```ts
 import { toast } from "sonner";
@@ -109,7 +110,7 @@ toast.error("Error message");
 
 ## Form Example
 
-If you need to create form, you need to follow the following example :
+If you need to create form, you need to follow the following example:
 
 ```tsx
 import {
@@ -164,44 +165,38 @@ export const Form = () => {
 
 Server Action is a way to execute server-side code like to mutate database etc... but without API endpoint. It's a React abstraction to handle the server-code.
 
-To create and use server-action, you muse follow the following process.
+To create and use server-action, you must follow the following process:
 
-1. Create a server action files
+1. Create a server action file
 
-We use `server-action-name.action.ts` converntion to easily reconize server-action.
+We use `server-action-name.action.ts` convention to easily recognize server-actions.
 
 ```ts
 // All server action must start with "use server" to inform NextJS that this method must be executed on the server
 "use server";
 
-// orgAction is a utility from the library "next-safe-action" that handle middleware to verify the permission of the user.
-// use `authAction` for not-org-related actions.
-// import { orgAction } from "@/lib/actions/safe-actions";
+// authAction is a utility from the library "next-safe-action" that handles middleware to verify the authentication
+import { authAction } from "@/lib/actions/safe-actions";
 
-export const demoAction = orgAction
-  // We can limit the action to a specific role
-  .metadata({
-    roles: ["OWNER", "ADMIN"],
-  })
+export const demoAction = authAction
   // The schema is used to validate the input of the action
-  .schema(DatabaseFormSchema)
+  .schema(DataFormSchema)
   .action(async ({ parsedInput: input, ctx }) => {
     // we can do async code here
-    const database = await prisma.database.create({
+    const data = await prisma.data.create({
       data: {
         name: input.name,
-        schema: input.schema,
-        organizationId: ctx.org.id,
+        userId: ctx.auth.userId,
       },
     });
 
-    return database;
+    return data;
   });
 ```
 
 2. Use the server action in a client component
 
-In any client component we can use Server Action like the following example :
+In any client component we can use Server Action like the following example:
 
 ```tsx
 import { demoAction } from "./server-action-name.action";
@@ -221,78 +216,35 @@ export const Form = () => {
   });
 ```
 
-<!-- ## Safe Route
-
-You need to use next-zod-route to create a safe route.
-
-```ts
-// app/api/org/[orgId]/route.ts
-import { prisma } from "@/lib/prisma";
-// import { orgRoute } from "@/lib/safe-route";
-import { z } from "zod";
-
-export const POST = orgRoute
-  // Path params = /orgs/:orgId
-  .params(
-    z.object({
-      orgId: z.string(),
-    }),
-  )
-  // Body params = { name: "John" }
-  .body(z.object({ name: z.string() }))
-  // Query params = ?a=1&b=2
-  .query(z.object({ query: z.string() }))
-  .handler(async (req, { params, body, query, context }) => {
-    // Safe check orgId
-    const orgId = params.orgId;
-    await prisma.organization.update({
-      where: {
-        id: params.orgId,
-      },
-      data: {
-        name: body.name,
-      },
-    });
-  });
-``` -->
-
-<!-- - Always create org related routes insides `/api/org/[orgId]/*` -->
-<!-- - Always use `orgRoute` to create safe routes inside `/api/org/[orgId]/*` -->
-<!-- - In general, you can use `authRoute` to create safe routes that is NOT related to orgs. -->
-
 ## Auth
 
-To get the current user, you must use `auth` function.
+To get the current user, you must use better-auth:
 
 ```ts
 import { authClient } from "@/lib/auth-client";
 
-export function User(){
+export function User() {
+  const {
+    data: session,
+    isPending, //loading state
+    error, //error object
+    refetch //refetch the session
+  } = authClient.useSession();
 
-    const {
-        data: session,
-        isPending, //loading state
-        error, //error object
-        refetch //refetch the session
-    } = authClient.useSession()
-
-    return (
-        //...
-    )
+  return (
+    //...
+  );
 }
 ```
 
-<!-- ## Org
-
-- You muse always use organisation for ressources. Everything must be linked to an organisation, not a user.
-
-- To get an organisation, you can use `getCurrentOrgCache` or `getRequiredCurrentOrgCache` function.
+For server-side authentication:
 
 ```ts
-import { getCurrentOrgCache } from "@/lib/react/cache";
+import { auth } from "@/lib/auth";
 
-const org = await getCurrentOrgCache();
-``` -->
+// In a server component or server action
+const session = await auth.getSession();
+```
 
 ## Professional Commit Message Prompt
 
