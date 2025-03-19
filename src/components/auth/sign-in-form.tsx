@@ -22,6 +22,7 @@ import { Input } from "@/components/ui/input";
 import { ButtonLoading } from "@/components/ui/loading";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -34,6 +35,7 @@ const SignInSchema = z.object({
 
 export function SignInForm() {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const form = useZodForm({
     schema: SignInSchema,
@@ -62,7 +64,19 @@ export function SignInForm() {
             // redirect("/dashboard");
           },
           onError: (ctx) => {
-            toast.error(ctx.error.message || "Identifiants incorrects");
+            // Gestion spécifique pour l'email non vérifié (status 403)
+            if (
+              ctx.error.status === 403 &&
+              ctx.error.message.toLowerCase().includes("email")
+            ) {
+              toast.error(
+                "Veuillez vérifier votre adresse email avant de vous connecter",
+              );
+              // Rediriger vers la page de renvoi de vérification d'email
+              router.push(`/auth/resend-verification`);
+            } else {
+              toast.error(ctx.error.message || "Identifiants incorrects");
+            }
           },
         },
       );
@@ -77,8 +91,7 @@ export function SignInForm() {
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle className="font-title text-center">Se connecter</CardTitle>
-        <CardTitle>Se connecter</CardTitle>
+        <CardTitle className="text-center">Se connecter</CardTitle>
         <CardDescription>
           Connectez-vous pour accéder à votre tableau de bord
         </CardDescription>
@@ -138,7 +151,6 @@ export function SignInForm() {
               ) : (
                 "Se connecter"
               )}
-              {isLoading ? "Connexion en cours..." : "Se connecter"}
             </Button>
           </CardFooter>
         </Form>
@@ -148,6 +160,11 @@ export function SignInForm() {
           Pas encore de compte?{" "}
           <Link href="/auth/signup" className="text-primary hover:underline">
             Créer un compte
+          </Link>
+        </div>
+        <div className="text-xs text-center text-muted-foreground w-full">
+          <Link href="/auth/resend-verification" className="hover:underline">
+            Renvoyer l'email de vérification
           </Link>
         </div>
       </CardFooter>

@@ -23,3 +23,12 @@ export const resetPasswordWithToken = async (
     token,
   });
 };
+
+export const sendVerificationEmail = async (email: string) => {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+
+  return authClient.sendVerificationEmail({
+    email,
+    callbackURL: `${appUrl}/auth/verify-email`,
+  });
+};
