@@ -24,7 +24,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
-import { resetPassword } from "@/lib/actions/reset-password.action";
+import { resetPasswordWithToken } from "@/lib/auth-client";
 
 const ResetPasswordSchema = z
   .object({
@@ -58,16 +58,13 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     setIsLoading(true);
 
     try {
-      const result = await resetPassword({
-        token,
-        password: data.password,
-      });
+      const result = await resetPasswordWithToken(data.password, token);
 
-      if (result.success) {
+      if (!result.error) {
         toast.success("Mot de passe réinitialisé avec succès");
         router.push("/auth/signin");
       } else {
-        toast.error(result.error || "Une erreur est survenue");
+        toast.error(result.error.message || "Une erreur est survenue");
       }
     } catch (error) {
       console.error(error);

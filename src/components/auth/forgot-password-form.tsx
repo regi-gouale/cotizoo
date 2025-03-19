@@ -24,7 +24,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
-import { requestPasswordReset } from "@/lib/actions/forgot-password.action";
+import { forgotPassword } from "@/lib/auth-client";
 
 const ForgotPasswordSchema = z.object({
   email: z.string().email("Email invalide"),
@@ -45,13 +45,13 @@ export function ForgotPasswordForm() {
     setIsLoading(true);
 
     try {
-      const result = await requestPasswordReset(data);
-      
-      if (result.success) {
+      const result = await forgotPassword(data.email);
+
+      if (!result.error) {
         setIsSubmitted(true);
         toast.success("Instructions envoyées par e-mail");
       } else {
-        toast.error(result.error || "Une erreur est survenue");
+        toast.error(result.error.message || "Une erreur est survenue");
       }
     } catch (error) {
       console.error(error);
@@ -67,12 +67,14 @@ export function ForgotPasswordForm() {
         <CardHeader>
           <CardTitle className="text-center">Email envoyé</CardTitle>
           <CardDescription>
-            Si un compte existe avec cette adresse email, vous recevrez un lien pour réinitialiser votre mot de passe.
+            Si un compte existe avec cette adresse email, vous recevrez un lien
+            pour réinitialiser votre mot de passe.
           </CardDescription>
         </CardHeader>
         <CardContent className="text-center">
           <p className="mb-4">
-            Vérifiez votre boîte de réception et suivez les instructions dans l'email.
+            Vérifiez votre boîte de réception et suivez les instructions dans
+            l'email.
           </p>
           <p className="text-sm text-muted-foreground">
             Le lien expirera dans 1 heure.

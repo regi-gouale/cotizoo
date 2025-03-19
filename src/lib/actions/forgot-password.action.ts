@@ -24,7 +24,7 @@ function generateUUID(): string {
   // Générer des valeurs aléatoires en utilisant crypto-js
   const randomBytes = CryptoJS.lib.WordArray.random(16);
   const hexString = CryptoJS.enc.Hex.stringify(randomBytes);
-  
+
   // Formater la chaîne sous forme d'UUID v4
   return [
     hexString.substring(0, 8),
@@ -32,13 +32,14 @@ function generateUUID(): string {
     // Set les bits pour indiquer qu'il s'agit d'un UUID v4
     "4" + hexString.substring(13, 16),
     // Set les bits selon la spec UUID v4
-    ((parseInt(hexString.substring(16, 17), 16) & 0x3) | 0x8).toString(16) + hexString.substring(17, 20),
-    hexString.substring(20, 32)
+    ((parseInt(hexString.substring(16, 17), 16) & 0x3) | 0x8).toString(16) +
+      hexString.substring(17, 20),
+    hexString.substring(20, 32),
   ].join("-");
 }
 
 export async function requestPasswordReset(
-  data: z.infer<typeof RequestSchema>
+  data: z.infer<typeof RequestSchema>,
 ): Promise<RequestResult> {
   try {
     // Valider les données d'entrée
@@ -58,7 +59,7 @@ export async function requestPasswordReset(
     // Générer un token sécurisé avec crypto-js
     const randomBytes = CryptoJS.lib.WordArray.random(32);
     const token = CryptoJS.enc.Hex.stringify(randomBytes);
-    
+
     const expiresAt = new Date();
     expiresAt.setHours(expiresAt.getHours() + 1); // Expiration dans 1 heure
 
@@ -81,7 +82,7 @@ export async function requestPasswordReset(
       user.email,
       "Réinitialisation de votre mot de passe",
       getPasswordResetHtml({ resetUrl }),
-      {}
+      {},
     );
 
     return { success: true };
