@@ -1,7 +1,10 @@
 import { DashboardHeader } from "@/components/layout/dashboard-header";
+import { DashboardSidebar } from "@/components/layout/dashboard-sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { CSSProperties } from "react";
 
 export const metadata = {
   title: {
@@ -28,9 +31,20 @@ export default async function DashboardLayout({
   const user = session.user || null;
 
   return (
-    <div className="flex flex-col w-full mx-auto min-h-[calc(100vh-4rem)]">
-      <DashboardHeader user={user} />
-      <main className="flex-1 py-6">{children}</main>
-    </div>
+    <SidebarProvider
+      defaultOpen={true}
+      style={
+        {
+          "--sidebar-width": "19rem",
+        } as CSSProperties
+      }
+    >
+      <DashboardSidebar />
+
+      <SidebarInset className="w-full">
+        <DashboardHeader user={user} />
+        <main className="flex-1 overflow-auto p-4 md:p-6">{children}</main>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }

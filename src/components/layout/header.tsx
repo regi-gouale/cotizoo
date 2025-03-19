@@ -1,13 +1,11 @@
 "use client";
 
-import { SignupModal } from "@/components/forms/cta-modal";
 import { MobileMenu } from "@/components/layout/mobile-menu";
 import { NavigationItems } from "@/components/layout/navigation-items";
-import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetTrigger } from "@/components/ui/sheet";
+import { useScrollDetection } from "@/hooks/use-scroll-detection";
 import { authClient } from "@/lib/auth-client";
-import { useScrollDetection } from "@/lib/hooks/use-scroll-detection";
 import { cn } from "@/lib/utils";
 import { ArrowRight, ChevronRight, CoinsIcon, MenuIcon, X } from "lucide-react";
 import Link from "next/link";
