@@ -176,7 +176,7 @@ We use `server-action-name.action.ts` converntion to easily reconize server-acti
 
 // orgAction is a utility from the library "next-safe-action" that handle middleware to verify the permission of the user.
 // use `authAction` for not-org-related actions.
-import { orgAction } from "@/lib/actions/safe-actions";
+// import { orgAction } from "@/lib/actions/safe-actions";
 
 export const demoAction = orgAction
   // We can limit the action to a specific role
@@ -221,14 +221,14 @@ export const Form = () => {
   });
 ```
 
-## Safe Route
+<!-- ## Safe Route
 
 You need to use next-zod-route to create a safe route.
 
 ```ts
 // app/api/org/[orgId]/route.ts
 import { prisma } from "@/lib/prisma";
-import { orgRoute } from "@/lib/safe-route";
+// import { orgRoute } from "@/lib/safe-route";
 import { z } from "zod";
 
 export const POST = orgRoute
@@ -254,7 +254,7 @@ export const POST = orgRoute
       },
     });
   });
-```
+``` -->
 
 <!-- - Always create org related routes insides `/api/org/[orgId]/*` -->
 <!-- - Always use `orgRoute` to create safe routes inside `/api/org/[orgId]/*` -->

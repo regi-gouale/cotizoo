@@ -3,6 +3,14 @@ import { Resend } from "resend";
 // Initialiser Resend avec la clé API
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+// Configuration email depuis les variables d'environnement
+export const emailConfig = {
+  fromEmail: process.env.EMAIL_FROM || "no-reply@cotizoo.com",
+  replyToEmail: process.env.EMAIL_REPLY_TO || "support@cotizoo.com",
+  siteName: process.env.SITE_NAME || "Cotizoo",
+  siteUrl: process.env.NEXT_PUBLIC_APP_URL || "https://cotizoo.com",
+};
+
 // Définir les types pour les paramètres d'email
 type SendEmailParams = {
   to: string | string[];
@@ -12,6 +20,7 @@ type SendEmailParams = {
   cc?: string | string[];
   bcc?: string | string[];
   replyTo?: string;
+  text?: string;
 };
 
 /**
@@ -20,11 +29,11 @@ type SendEmailParams = {
  * @returns Un objet contenant l'ID de l'email envoyé ou une erreur
  */
 export async function sendEmail(params: SendEmailParams) {
-  const { to, subject, html, from, cc, bcc, replyTo } = params;
+  const { to, subject, html, from, cc, bcc, replyTo, text } = params;
 
   // Utiliser l'email par défaut si aucun n'est fourni
-  const fromEmail =
-    from || process.env.DEFAULT_FROM_EMAIL || "no-reply@cotizoo.com";
+  const fromEmail = from || emailConfig.fromEmail;
+  const replyToEmail = replyTo || emailConfig.replyToEmail;
 
   try {
     const { data, error } = await resend.emails.send({
@@ -34,7 +43,8 @@ export async function sendEmail(params: SendEmailParams) {
       html,
       cc,
       bcc,
-      replyTo,
+      replyTo: replyToEmail,
+      text,
     });
 
     if (error) {
@@ -67,5 +77,57 @@ export async function sendSimpleEmail(
     to,
     subject,
     html: `<div>${message}</div>`,
+  });
+}
+
+// Types pour les variables des templates
+export type TemplateVariables = Record<
+  string,
+  string | number | boolean | undefined | null
+>;
+
+/**
+ * Génère un email HTML depuis un template avec des variables
+ */
+export function renderTemplate(
+  template: string,
+  variables: TemplateVariables,
+): string {
+  let renderedTemplate = template;
+
+  // Remplacer toutes les variables dans le template
+  Object.entries(variables).forEach(([key, value]) => {
+    const regex = new RegExp(`{{\\s*${key}\\s*}}`, "g");
+    renderedTemplate = renderedTemplate.replace(regex, String(value ?? ""));
+  });
+
+  // Remplacer les variables globales
+  renderedTemplate = renderedTemplate.replace(
+    /{{siteName}}/g,
+    emailConfig.siteName,
+  );
+  renderedTemplate = renderedTemplate.replace(
+    /{{siteUrl}}/g,
+    emailConfig.siteUrl,
+  );
+
+  return renderedTemplate;
+}
+
+/**
+ * Envoie un email à partir d'un template et de variables
+ */
+export async function sendTemplateEmail(
+  to: string | string[],
+  subject: string,
+  templateHtml: string,
+  variables: TemplateVariables,
+) {
+  const html = renderTemplate(templateHtml, variables);
+
+  return sendEmail({
+    to,
+    subject,
+    html,
   });
 }
