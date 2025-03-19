@@ -21,8 +21,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { ButtonLoading } from "@/components/ui/loading";
 import { authClient } from "@/lib/auth-client";
-
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -38,6 +38,7 @@ const SignUpSchema = z.object({
 
 export function SignUpForm() {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const form = useZodForm({
     schema: SignUpSchema,
@@ -65,10 +66,11 @@ export function SignUpForm() {
           },
           onSuccess: () => {
             toast.success(
-              "Inscription réussie! Veuillez vérifier votre email.",
+              "Inscription réussie! Veuillez vérifier votre email pour activer votre compte.",
             );
             form.reset();
-            // redirect("/dashboard");
+            // Rediriger vers la page d'attente de vérification
+            router.push(`/auth/verify-email`);
           },
           onError: (ctx) => {
             toast.error(ctx.error.message);
@@ -85,10 +87,7 @@ export function SignUpForm() {
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle className="font-title text-center">
-          Créer un compte
-        </CardTitle>
-        <CardTitle>Créer un compte</CardTitle>
+        <CardTitle className="text-center">Créer un compte</CardTitle>
         <CardDescription>
           Inscrivez-vous pour accéder à votre tableau de bord
         </CardDescription>
@@ -141,6 +140,10 @@ export function SignUpForm() {
               )}
             />
           </div>
+          <div className="mt-2 text-sm text-muted-foreground">
+            En vous inscrivant, vous recevrez un email de vérification pour
+            activer votre compte.
+          </div>
           <CardFooter className="flex justify-end pt-6 px-0">
             <Button type="submit" disabled={isLoading}>
               {isLoading ? (
@@ -151,7 +154,6 @@ export function SignUpForm() {
               ) : (
                 "S'inscrire"
               )}
-              {isLoading ? "Inscription en cours..." : "S'inscrire"}
             </Button>
           </CardFooter>
         </Form>

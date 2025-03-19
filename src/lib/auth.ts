@@ -1,8 +1,11 @@
+import { sendTemplateEmail } from "@/lib/email";
+import {
+  getPasswordResetHtml,
+  getRegistrationEmailHtml,
+} from "@/lib/email-templates";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "./prisma";
-import { sendTemplateEmail } from "@/lib/email";
-import { getPasswordResetHtml } from "@/lib/email-templates";
 
 export class AuthError extends Error {}
 
@@ -10,11 +13,25 @@ export const auth = betterAuth({
   database: prismaAdapter(prisma, { provider: "postgresql" }),
   emailAndPassword: {
     enabled: true,
+    requireEmailVerification: true,
     sendResetPassword: async ({ user, url, token }, request) => {
       await sendTemplateEmail(
         user.email,
         "Réinitialisation de votre mot de passe",
         getPasswordResetHtml({ resetUrl: url }),
+        {},
+      );
+    },
+  },
+  emailVerification: {
+    sendVerificationEmail: async ({ user, url, token }, request) => {
+      await sendTemplateEmail(
+        user.email,
+        "Vérification de votre adresse email",
+        getRegistrationEmailHtml({
+          name: user.name || "Utilisateur",
+          confirmUrl: url,
+        }),
         {},
       );
     },
