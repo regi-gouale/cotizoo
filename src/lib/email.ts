@@ -6,6 +6,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 // Configuration email depuis les variables d'environnement
 export const emailConfig = {
   fromEmail: process.env.EMAIL_FROM || "no-reply@cotizoo.com",
+  fromName: process.env.EMAIL_FROM_NAME || "Régi de Cotizoo",
   replyToEmail: process.env.EMAIL_REPLY_TO || "support@cotizoo.com",
   siteName: process.env.SITE_NAME || "cotizoo",
   siteUrl: process.env.NEXT_PUBLIC_APP_URL || "https://cotizoo.com",
@@ -17,6 +18,7 @@ type SendEmailParams = {
   subject: string;
   html: string;
   from?: string;
+  fromName?: string;
   cc?: string | string[];
   bcc?: string | string[];
   replyTo?: string;
@@ -29,15 +31,16 @@ type SendEmailParams = {
  * @returns Un objet contenant l'ID de l'email envoyé ou une erreur
  */
 export async function sendEmail(params: SendEmailParams) {
-  const { to, subject, html, from, cc, bcc, replyTo, text } = params;
+  const { to, subject, html, from, fromName, cc, bcc, replyTo, text } = params;
 
   // Utiliser l'email par défaut si aucun n'est fourni
   const fromEmail = from || emailConfig.fromEmail;
+  const senderName = fromName || emailConfig.fromName;
   const replyToEmail = replyTo || emailConfig.replyToEmail;
 
   try {
     const { data, error } = await resend.emails.send({
-      from: fromEmail,
+      from: `${senderName} <${fromEmail}>`,
       to,
       subject,
       html,
