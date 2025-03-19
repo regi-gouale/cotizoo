@@ -1,4 +1,5 @@
 import { DashboardHeader } from "@/components/layout/dashboard-header";
+import { DashboardSidebar } from "@/components/layout/dashboard-sidebar";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -28,9 +29,14 @@ export default async function DashboardLayout({
   const user = session.user || null;
 
   return (
-    <div className="flex flex-col w-full mx-auto min-h-[calc(100vh-4rem)]">
-      <DashboardHeader user={user} />
-      <main className="flex-1 py-6">{children}</main>
+    <div className="flex h-screen flex-col md:flex-row">
+      <div className="hidden md:block">
+        <DashboardSidebar />
+      </div>
+      <div className="flex flex-col flex-1 min-h-screen overflow-hidden ">
+        <DashboardHeader user={user} />
+        <main className="flex-1 overflow-auto p-4 md:p-6">{children}</main>
+      </div>
     </div>
   );
 }
