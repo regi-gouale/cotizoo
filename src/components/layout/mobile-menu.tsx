@@ -1,6 +1,5 @@
 "use client";
 
-import { SignupModal } from "@/components/forms/cta-modal";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -60,7 +59,7 @@ function MobileMenuContent({ navigationItems, onClose }: MobileMenuProps) {
         </SheetTitle>
         <ThemeToggle className="text-primary" />
       </SheetHeader>
-      <nav className="flex flex-col gap-4 mx-2 mt-4">
+      <nav className="flex flex-col gap-4 mx-2">
         {navigationItems.map((item) => (
           <Link
             key={item.href}
@@ -104,7 +103,7 @@ function MobileMenuContent({ navigationItems, onClose }: MobileMenuProps) {
         )}
 
         <Button
-          variant="ghost"
+          variant="default"
           asChild
           onMouseEnter={() => setIsContactHovered(true)}
           onMouseLeave={() => setIsContactHovered(false)}
@@ -121,7 +120,7 @@ function MobileMenuContent({ navigationItems, onClose }: MobileMenuProps) {
           </Link>
         </Button>
 
-        <SignupModal className="bg-primary text-primary-foreground" />
+        {/* <SignupModal className="bg-primary text-primary-foreground" /> */}
       </nav>
     </SheetContent>
   );
