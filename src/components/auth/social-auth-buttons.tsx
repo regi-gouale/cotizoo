@@ -1,11 +1,11 @@
 "use client";
 
+import { GithubIcon } from "@/components/svg/github-icon";
+import { GoogleIcon } from "@/components/svg/google-icon";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
 import { useState } from "react";
 import { toast } from "sonner";
-import { GithubIcon } from "../svg/github-icon";
-import { GoogleIcon } from "../svg/google-icon";
 
 export function SocialAuthButtons() {
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);

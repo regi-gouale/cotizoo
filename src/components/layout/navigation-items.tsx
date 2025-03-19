@@ -1,10 +1,10 @@
 "use client";
 
+import { type NavigationItem } from "@/components/layout/header";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Suspense } from "react";
-import { type NavigationItem } from "./header";
 
 type NavigationItemsProps = {
   items: NavigationItem[];

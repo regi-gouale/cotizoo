@@ -1,4 +1,4 @@
-import { createEmailLayout } from "./index";
+import { createEmailLayout } from "@/lib/email-templates/index";
 
 export function registrationTemplate(variables: {
   name: string;

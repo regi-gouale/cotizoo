@@ -1,8 +1,8 @@
-import { missedPaymentTemplate } from "./missed-payment";
-import { passwordResetTemplate } from "./password-reset";
-import { paymentNotificationTemplate } from "./payment-notification";
-import { registrationTemplate } from "./registration";
-import { tontineInvitationTemplate } from "./tontine-invitation";
+import { missedPaymentTemplate } from "@/lib/email-templates/missed-payment";
+import { passwordResetTemplate } from "@/lib/email-templates/password-reset";
+import { paymentNotificationTemplate } from "@/lib/email-templates/payment-notification";
+import { registrationTemplate } from "@/lib/email-templates/registration";
+import { tontineInvitationTemplate } from "@/lib/email-templates/tontine-invitation";
 
 // Templates d'emails disponibles
 export const emailTemplates = {

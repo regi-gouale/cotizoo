@@ -3,9 +3,9 @@ import {
   getPasswordResetHtml,
   getRegistrationEmailHtml,
 } from "@/lib/email-templates";
+import { prisma } from "@/lib/prisma";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { prisma } from "./prisma";
 
 export class AuthError extends Error {}
 

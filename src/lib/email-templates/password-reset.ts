@@ -1,4 +1,4 @@
-import { createEmailLayout } from "./index";
+import { createEmailLayout } from "@/lib/email-templates/index";
 
 export function passwordResetTemplate(variables: { resetUrl: string }): string {
   const content = `

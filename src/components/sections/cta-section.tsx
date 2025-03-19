@@ -1,8 +1,8 @@
 "use client";
 
+import { CtaForm } from "@/components/forms/cta-form";
 import { Card, CardContent } from "@/components/ui/card";
 import { Suspense } from "react";
-import { CtaForm } from "../forms/cta-form";
 
 function CtaSectionFallback() {
   return (

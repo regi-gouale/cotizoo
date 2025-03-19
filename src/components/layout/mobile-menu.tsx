@@ -1,5 +1,6 @@
 "use client";
 
+import { type NavigationItem } from "@/components/layout/header";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -9,7 +10,6 @@ import { ArrowRight, ChevronRight, CoinsIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Suspense, useState } from "react";
-import { type NavigationItem } from "./header";
 
 type MobileMenuProps = {
   navigationItems: NavigationItem[];

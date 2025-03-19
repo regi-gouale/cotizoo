@@ -1,5 +1,6 @@
 "use client";
 
+import { SocialAuthButtons } from "@/components/auth/social-auth-buttons";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -26,7 +27,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
-import { SocialAuthButtons } from "./social-auth-buttons";
 
 const SignInSchema = z.object({
   email: z.string().email("Email invalide"),

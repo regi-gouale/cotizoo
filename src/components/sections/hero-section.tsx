@@ -1,10 +1,10 @@
 "use client";
 
+import { SignupModal } from "@/components/forms/cta-modal";
 import { CircleSvg } from "@/components/svg/circle-svg";
+import { Button } from "@/components/ui/button";
 import { CoinsIcon } from "lucide-react";
 import { Suspense } from "react";
-import { SignupModal } from "../forms/cta-modal";
-import { Button } from "../ui/button";
 
 function HeroSectionFallback() {
   return (
