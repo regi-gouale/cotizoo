@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["driverAdapters"]
@@ -23,7 +17,7 @@ model Lead {
 }
 
 model User {
-  id            String    @id
+  id            String           @id
   name          String
   email         String
   emailVerified Boolean
@@ -32,6 +26,9 @@ model User {
   updatedAt     DateTime
   sessions      Session[]
   accounts      Account[]
+  tontines      UserTontine[]
+  transactions  Transaction[]
+  historyLogs   TontineHistory[]
 
   @@unique([email])
   @@map("user")
@@ -80,4 +77,116 @@ model Verification {
   updatedAt  DateTime?
 
   @@map("verification")
+}
+
+model Tontine {
+  id               String           @id @default(cuid())
+  name             String
+  description      String
+  type             TontineType
+  frequency        String
+  contribution     Decimal
+  startDate        DateTime
+  endDate          DateTime
+  maxMembers       Int
+  status           TontineStatus    @default(ACTIVE)
+  penaltyFee       Decimal          @default(5.0)
+  allocationMethod AllocationMethod @default(FIXED)
+  rules            String?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  members          UserTontine[]
+  transactions     Transaction[]
+  historyLogs      TontineHistory[]
+
+  @@map("tontine")
+}
+
+model UserTontine {
+  id        String      @id @default(cuid())
+  userId    String
+  tontineId String
+  role      TontineRole @default(MEMBER)
+  joinedAt  DateTime    @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tontine Tontine @relation(fields: [tontineId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, tontineId])
+  @@map("user_tontine")
+}
+
+model Transaction {
+  id            String            @id @default(cuid())
+  userId        String
+  tontineId     String
+  amount        Decimal
+  type          TransactionType
+  status        TransactionStatus @default(PENDING)
+  paymentMethod String?
+  reference     String?
+  createdAt     DateTime          @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tontine Tontine @relation(fields: [tontineId], references: [id], onDelete: Cascade)
+
+  @@map("transaction")
+}
+
+model TontineHistory {
+  id        String        @id @default(cuid())
+  tontineId String
+  userId    String?
+  action    HistoryAction
+  details   String?
+  createdAt DateTime      @default(now())
+
+  tontine Tontine @relation(fields: [tontineId], references: [id], onDelete: Cascade)
+  user    User?   @relation(fields: [userId], references: [id])
+
+  @@map("tontine_history")
+}
+
+enum TontineType {
+  ROTATIF
+  INVESTISSEMENT
+  PROJET
+}
+
+enum TontineRole {
+  ADMIN
+  MEMBER
+}
+
+enum TontineStatus {
+  ACTIVE
+  COMPLETED
+  SUSPENDED
+}
+
+enum AllocationMethod {
+  FIXED
+  VOTE
+  RANDOM
+  ENCHERE
+}
+
+enum TransactionType {
+  COTISATION
+  REDISTRIBUTION
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+enum HistoryAction {
+  CREATION
+  JOIN
+  EXCLUSION
+  PAYMENT
+  RULES_UPDATED
+  REDISTRIBUTION
 }
