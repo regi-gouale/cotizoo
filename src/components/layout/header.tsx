@@ -6,9 +6,10 @@ import { NavigationItems } from "@/components/layout/navigation-items";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetTrigger } from "@/components/ui/sheet";
+import { authClient } from "@/lib/auth-client";
 import { useScrollDetection } from "@/lib/hooks/use-scroll-detection";
 import { cn } from "@/lib/utils";
-import { CoinsIcon, MenuIcon, X } from "lucide-react";
+import { ArrowRight, ChevronRight, CoinsIcon, MenuIcon, X } from "lucide-react";
 import Link from "next/link";
 import { Suspense, useState } from "react";
 
@@ -62,6 +63,82 @@ function BrandLogo() {
   );
 }
 
+function LoginOrDashboardButton() {
+  const { data: session, isPending } = authClient.useSession();
+  const [isHovered, setIsHovered] = useState(false);
+
+  if (isPending) {
+    return (
+      <Button variant="ghost" disabled className="animate-pulse">
+        Chargement...
+      </Button>
+    );
+  }
+
+  if (session) {
+    return (
+      <Button
+        variant="ghost"
+        asChild
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        className="transition-all duration-200"
+      >
+        <Link href="/dashboard" className="flex items-center gap-2">
+          Tableau de bord
+          {isHovered ? (
+            <ArrowRight className="size-4" />
+          ) : (
+            <ChevronRight className="size-4" />
+          )}
+        </Link>
+      </Button>
+    );
+  }
+
+  return (
+    <Button
+      variant="ghost"
+      asChild
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="transition-all duration-200"
+    >
+      <Link href="/auth/signin" className="flex items-center gap-2">
+        Connexion
+        {isHovered ? (
+          <ArrowRight className="size-4" />
+        ) : (
+          <ChevronRight className="size-4" />
+        )}
+      </Link>
+    </Button>
+  );
+}
+
+function ContactButton() {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <Button
+      variant="default"
+      asChild
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="transition-all duration-200"
+    >
+      <Link href="/contact" className="flex items-center gap-2">
+        Contacter notre équipe
+        {isHovered ? (
+          <ArrowRight className="size-4" />
+        ) : (
+          <ChevronRight className="size-4" />
+        )}
+      </Link>
+    </Button>
+  );
+}
+
 function HeaderContent() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isScrolled = useScrollDetection(20);
@@ -83,15 +160,18 @@ function HeaderContent() {
             className="hidden gap-6 md:flex"
           />
         </div>
-
         <div className="flex items-center gap-4">
-          <ThemeToggle className="hidden md:flex text-primary" />
-          <Button
+          {/* <ThemeToggle className="hidden md:flex text-primary" /> */}
+          <div className="hidden md:flex items-center gap-2">
+            <LoginOrDashboardButton />
+            <ContactButton />
+          </div>
+          {/* <Button
             asChild
             className="hidden md:flex transition-all duration-300 hover:shadow-md hover:translate-y-[-2px]"
           >
             <SignupModal className="bg-primary text-primary-foreground hover:bg-primary/90" />
-          </Button>
+          </Button> */}
 
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <SheetTrigger asChild className="md:hidden">

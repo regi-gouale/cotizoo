@@ -2,12 +2,14 @@
 
 import { SignupModal } from "@/components/forms/cta-modal";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { Button } from "@/components/ui/button";
 import { SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
-import { CoinsIcon } from "lucide-react";
+import { ArrowRight, ChevronRight, CoinsIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { type NavigationItem } from "./header";
 
 type MobileMenuProps = {
@@ -39,6 +41,9 @@ function MobileMenuFallback() {
 
 function MobileMenuContent({ navigationItems, onClose }: MobileMenuProps) {
   const pathname = usePathname();
+  const { data: session, isPending } = authClient.useSession();
+  const [isLoginHovered, setIsLoginHovered] = useState(false);
+  const [isContactHovered, setIsContactHovered] = useState(false);
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
@@ -72,6 +77,49 @@ function MobileMenuContent({ navigationItems, onClose }: MobileMenuProps) {
             {item.label}
           </Link>
         ))}
+
+        <div className="border-t border-border my-2 pt-2"></div>
+
+        {!isPending && (
+          <Button
+            variant="ghost"
+            asChild
+            onMouseEnter={() => setIsLoginHovered(true)}
+            onMouseLeave={() => setIsLoginHovered(false)}
+            className="justify-start px-2 transition-all duration-200"
+            onClick={onClose}
+          >
+            <Link
+              href={session ? "/dashboard" : "/auth/signin"}
+              className="flex items-center gap-2"
+            >
+              {session ? "Tableau de bord" : "Connexion"}
+              {isLoginHovered ? (
+                <ArrowRight className="size-4" />
+              ) : (
+                <ChevronRight className="size-4" />
+              )}
+            </Link>
+          </Button>
+        )}
+
+        <Button
+          variant="ghost"
+          asChild
+          onMouseEnter={() => setIsContactHovered(true)}
+          onMouseLeave={() => setIsContactHovered(false)}
+          className="justify-start px-2 transition-all duration-200"
+          onClick={onClose}
+        >
+          <Link href="/contact" className="flex items-center gap-2">
+            Contacter notre équipe
+            {isContactHovered ? (
+              <ArrowRight className="size-4" />
+            ) : (
+              <ChevronRight className="size-4" />
+            )}
+          </Link>
+        </Button>
 
         <SignupModal className="bg-primary text-primary-foreground" />
       </nav>
