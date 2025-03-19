@@ -78,6 +78,7 @@ export function SignInForm() {
     <Card className="w-full max-w-md">
       <CardHeader>
         <CardTitle className="font-title text-center">Se connecter</CardTitle>
+        <CardTitle>Se connecter</CardTitle>
         <CardDescription>
           Connectez-vous pour accéder à votre tableau de bord
         </CardDescription>
@@ -137,6 +138,7 @@ export function SignInForm() {
               ) : (
                 "Se connecter"
               )}
+              {isLoading ? "Connexion en cours..." : "Se connecter"}
             </Button>
           </CardFooter>
         </Form>

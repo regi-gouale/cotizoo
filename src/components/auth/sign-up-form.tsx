@@ -88,6 +88,7 @@ export function SignUpForm() {
         <CardTitle className="font-title text-center">
           Créer un compte
         </CardTitle>
+        <CardTitle>Créer un compte</CardTitle>
         <CardDescription>
           Inscrivez-vous pour accéder à votre tableau de bord
         </CardDescription>
@@ -150,6 +151,7 @@ export function SignUpForm() {
               ) : (
                 "S'inscrire"
               )}
+              {isLoading ? "Inscription en cours..." : "S'inscrire"}
             </Button>
           </CardFooter>
         </Form>
