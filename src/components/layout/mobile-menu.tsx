@@ -1,15 +1,17 @@
 "use client";
 
-import { type NavigationItem } from "@/components/layout/header";
+import {
+  LoginOrDashboardButton,
+  type NavigationItem,
+} from "@/components/layout/header";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
-import { Button } from "@/components/ui/button";
 import { SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { authClient } from "@/lib/auth-client";
-import { cn } from "@/lib/utils";
-import { ArrowRight, ChevronRight, CoinsIcon } from "lucide-react";
-import Link from "next/link";
+import { CoinsIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { Suspense, useState } from "react";
+import { Separator } from "../ui/separator";
+import { NavigationItems } from "./navigation-items";
 
 type MobileMenuProps = {
   navigationItems: NavigationItem[];
@@ -59,69 +61,32 @@ function MobileMenuContent({ navigationItems, onClose }: MobileMenuProps) {
         </SheetTitle>
         <ThemeToggle className="text-primary" />
       </SheetHeader>
-      <nav className="flex flex-col gap-4 mx-2">
-        {navigationItems.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={cn(
-              "text-base font-medium transition-all duration-200 px-2 py-2 rounded-md font-title",
-              isActive(item.href)
-                ? "text-foreground bg-muted"
-                : "text-muted-foreground hover:text-foreground hover:bg-muted/50 hover:translate-x-1",
-            )}
-            onClick={onClose}
-            aria-current={isActive(item.href) ? "page" : undefined}
-          >
-            {item.label}
-          </Link>
-        ))}
-
-        <div className="border-t border-border my-2 pt-2"></div>
-
-        {!isPending && (
-          <Button
-            variant="ghost"
-            asChild
-            onMouseEnter={() => setIsLoginHovered(true)}
-            onMouseLeave={() => setIsLoginHovered(false)}
-            className="justify-start px-2 transition-all duration-200"
-            onClick={onClose}
-          >
+      <div>
+        {/* <nav className="flex flex-col gap-4 mx-2">
+          {navigationItems.map((item) => (
             <Link
-              href={session ? "/dashboard" : "/auth/signin"}
-              className="flex items-center gap-2"
-            >
-              {session ? "Tableau de bord" : "Connexion"}
-              {isLoginHovered ? (
-                <ArrowRight className="size-4" />
-              ) : (
-                <ChevronRight className="size-4" />
+              key={item.href}
+              href={item.href}
+              className={cn(
+                "text-base font-medium transition-all duration-200 px-2 py-2 rounded-md font-title",
+                isActive(item.href)
+                  ? "text-foreground bg-muted"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50 hover:translate-x-1",
               )}
+              onClick={onClose}
+              aria-current={isActive(item.href) ? "page" : undefined}
+            >
+              {item.label}
             </Link>
-          </Button>
-        )}
-
-        <Button
-          variant="default"
-          asChild
-          onMouseEnter={() => setIsContactHovered(true)}
-          onMouseLeave={() => setIsContactHovered(false)}
-          className="justify-start px-2 transition-all duration-200"
-          onClick={onClose}
-        >
-          <Link href="/contact" className="flex items-center gap-2">
-            Contacter notre équipe
-            {isContactHovered ? (
-              <ArrowRight className="size-4" />
-            ) : (
-              <ChevronRight className="size-4" />
-            )}
-          </Link>
-        </Button>
-
-        {/* <SignupModal className="bg-primary text-primary-foreground" /> */}
-      </nav>
+          ))}
+        </nav> */}
+        <NavigationItems
+          items={navigationItems}
+          className="flex flex-col mx-4 gap-6 md:hidden"
+        />
+        <Separator className="my-4" />
+        {!isPending && <LoginOrDashboardButton />}
+      </div>
     </SheetContent>
   );
 }
