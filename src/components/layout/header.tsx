@@ -159,17 +159,10 @@ function HeaderContent() {
           />
         </div>
         <div className="flex items-center gap-4">
-          {/* <ThemeToggle className="hidden md:flex text-primary" /> */}
           <div className="hidden md:flex items-center gap-2">
             <LoginOrDashboardButton />
             <ContactButton />
           </div>
-          {/* <Button
-            asChild
-            className="hidden md:flex transition-all duration-300 hover:shadow-md hover:translate-y-[-2px]"
-          >
-            <SignupModal className="bg-primary text-primary-foreground hover:bg-primary/90" />
-          </Button> */}
 
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <SheetTrigger asChild className="md:hidden">
