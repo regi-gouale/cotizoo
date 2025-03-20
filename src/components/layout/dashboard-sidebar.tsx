@@ -7,8 +7,6 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { authClient } from "@/lib/auth-client";
 import {
@@ -25,8 +23,9 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { ComponentProps } from "react";
 import { toast } from "sonner";
+import { DashboardItems } from "../dashboard/dashboard-items";
 
-type SidebarNavItem = {
+export type SidebarNavItem = {
   label: string;
   href: string;
   icon: React.ReactNode;
@@ -89,25 +88,10 @@ export function DashboardSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
             <CoinsIcon className="ml-0.5 size-4 text-primary rotate-90" />
           </span>
         </Link>
-        {/* <SidebarTrigger className="ml-auto" /> */}
       </SidebarHeader>
       <SidebarContent>
         <SidebarMenu className="flex-1 ml-4">
-          {sidebarNavItems.map((item) => (
-            <SidebarMenuItem key={item.href}>
-              <SidebarMenuButton
-                asChild
-                isActive={pathname === item.href}
-                size="lg"
-                tooltip={item.label}
-              >
-                <Link href={item.href} className="flex w-full gap-4">
-                  {item.icon}
-                  <span>{item.label}</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
+          <DashboardItems items={sidebarNavItems} />
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter>
