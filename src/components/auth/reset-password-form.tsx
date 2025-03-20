@@ -20,23 +20,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ButtonLoading } from "@/components/ui/loading";
-import { resetPasswordWithToken } from "@/lib/auth-client";
+import { resetPasswordWithToken } from "@/lib/actions/reset-password.action";
+import { ResetPasswordSchema } from "@/lib/schemas/reset-password.schema";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
-
-const ResetPasswordSchema = z
-  .object({
-    password: z
-      .string()
-      .min(8, "Le mot de passe doit contenir au moins 8 caractères"),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Les mots de passe ne correspondent pas",
-    path: ["confirmPassword"],
-  });
 
 type ResetPasswordFormProps = {
   token: string;

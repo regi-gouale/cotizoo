@@ -1,3 +1,8 @@
+import {
+  AllocationMethod,
+  TontineFrequency,
+  TontineType,
+} from "@prisma/client";
 import { z } from "zod";
 
 export const CreateTontineSchema = z.object({
@@ -5,11 +10,13 @@ export const CreateTontineSchema = z.object({
   description: z
     .string()
     .min(10, "La description doit contenir au moins 10 caractères"),
-  type: z.enum(["ROTATIF", "INVESTISSEMENT", "PROJET"], {
-    invalid_type_error: "Type de tontine invalide",
+  type: z.nativeEnum(TontineType, {
+    errorMap: () => ({ message: "Type de tontine invalide" }),
   }),
-  frequency: z.string().min(1, "La fréquence est requise"),
-  contribution: z.string().refine(
+  frequency: z.nativeEnum(TontineFrequency, {
+    errorMap: () => ({ message: "Fréquence invalide" }),
+  }),
+  contributionPerMember: z.string().refine(
     async (val) => {
       try {
         const num = parseFloat(val);
@@ -20,6 +27,7 @@ export const CreateTontineSchema = z.object({
     },
     { message: "La contribution doit être un nombre positif" },
   ),
+
   startDate: z.date().or(
     z.string().refine(async (val) => !isNaN(Date.parse(val)), {
       message: "La date de début est requise",
@@ -30,16 +38,20 @@ export const CreateTontineSchema = z.object({
       message: "La date de fin est requise",
     }),
   ),
-  maxMembers: z
-    .string()
-    .or(z.number())
-    .refine(
-      async (val) => {
-        const num = typeof val === "string" ? parseInt(val, 10) : val;
+
+  maxMembers: z.string().refine(
+    async (val) => {
+      try {
+        const num = parseInt(val);
         return !isNaN(num) && num > 1;
-      },
-      { message: "Le nombre de membres doit être supérieur à 1" },
-    ),
+      } catch {
+        return false;
+      }
+    },
+    {
+      message: "Le nombre maximum de membres doit être un nombre supérieur à 1",
+    },
+  ),
   penaltyFee: z
     .string()
     .optional()
@@ -55,10 +67,6 @@ export const CreateTontineSchema = z.object({
       },
       { message: "Les frais de pénalité doivent être un nombre positif" },
     ),
-  allocationMethod: z
-    .enum(["FIXED", "VOTE", "RANDOM", "ENCHERE"], {
-      invalid_type_error: "Méthode d'allocation invalide",
-    })
-    .default("FIXED"),
+  allocationMethod: z.nativeEnum(AllocationMethod),
   rules: z.string().optional(),
 });

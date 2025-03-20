@@ -1,11 +1,11 @@
 "use server";
 
 import { auth } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
 import { CreateTontineSchema } from "@/lib/schemas/create-tontine.schema";
-import { Tontine } from "@prisma/client";
+import { Tontine, TontineStatus } from "@prisma/client";
 import { headers } from "next/headers";
 import { z } from "zod";
+import { prisma } from "../prisma";
 
 export type CreateTontineInput = z.infer<typeof CreateTontineSchema>;
 
@@ -13,16 +13,15 @@ type CreateTontineResult = {
   success: boolean;
   error?: string;
   tontineId?: string;
-  data?: Tontine; // Remplacez par le type de votre modèle Tontine
+  data?: Tontine;
 };
 
 // Action sécurisée qui nécessite l'authentification
-export async function createTontine(
-  data: z.infer<typeof CreateTontineSchema>,
-): Promise<CreateTontineResult> {
+export async function createTontine(data: z.infer<typeof CreateTontineSchema>) {
   try {
     // Get the current authenticated user
     const session = await auth.api.getSession({ headers: await headers() });
+    // console.log("Session:", session);
     if (!session?.user?.id) {
       return {
         success: false,
@@ -31,7 +30,7 @@ export async function createTontine(
     }
 
     // Convertir les valeurs string en types appropriés
-    const contributionDecimal = parseFloat(data.contribution);
+    const contributionDecimal = parseFloat(data.contributionPerMember);
     const maxMembersInt =
       typeof data.maxMembers === "string"
         ? parseInt(data.maxMembers, 10)
@@ -57,10 +56,11 @@ export async function createTontine(
         description: data.description,
         type: data.type,
         frequency: data.frequency,
-        contribution: contributionDecimal,
+        contributionPerMember: contributionDecimal,
         startDate: startDate,
         endDate: endDate,
         maxMembers: maxMembersInt,
+        status: TontineStatus.ACTIVE,
         penaltyFee: penaltyFeeDecimal,
         allocationMethod: data.allocationMethod,
         rules: data.rules,
@@ -89,7 +89,6 @@ export async function createTontine(
     };
   } catch (error) {
     console.error("Erreur lors de la création de la tontine:", error);
-
     return {
       success: false,
       error: "Une erreur est survenue lors de la création de la tontine.",

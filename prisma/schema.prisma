@@ -80,24 +80,24 @@ model Verification {
 }
 
 model Tontine {
-  id               String           @id @default(cuid())
-  name             String
-  description      String
-  type             TontineType
-  frequency        String
-  contribution     Decimal
-  startDate        DateTime
-  endDate          DateTime
-  maxMembers       Int
-  status           TontineStatus    @default(ACTIVE)
-  penaltyFee       Decimal          @default(5.0)
-  allocationMethod AllocationMethod @default(FIXED)
-  rules            String?
-  createdAt        DateTime         @default(now())
-  updatedAt        DateTime         @updatedAt
-  members          UserTontine[]
-  transactions     Transaction[]
-  historyLogs      TontineHistory[]
+  id                    String           @id @default(cuid())
+  name                  String
+  description           String
+  type                  TontineType
+  frequency             TontineFrequency @default(MONTHLY)
+  contributionPerMember Decimal
+  startDate             DateTime
+  endDate               DateTime
+  maxMembers            Int
+  status                TontineStatus    @default(ACTIVE)
+  penaltyFee            Decimal?         @default(5.0)
+  allocationMethod      AllocationMethod @default(FIXED)
+  rules                 String?
+  createdAt             DateTime         @default(now())
+  updatedAt             DateTime         @updatedAt
+  members               UserTontine[]
+  transactions          Transaction[]
+  historyLogs           TontineHistory[]
 
   @@map("tontine")
 }
@@ -189,4 +189,13 @@ enum HistoryAction {
   PAYMENT
   RULES_UPDATED
   REDISTRIBUTION
+}
+
+enum TontineFrequency {
+  WEEKLY
+  BIWEEKLY
+  MONTHLY
+  QUARTERLY
+  SEMIANNUAL
+  YEARLY
 }
