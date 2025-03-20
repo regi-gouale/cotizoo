@@ -20,11 +20,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ButtonLoading } from "@/components/ui/loading";
+import { forgotPassword } from "@/lib/actions/forgot-password.action";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
-import { forgotPassword } from "@/lib/auth-client";
 
 const ForgotPasswordSchema = z.object({
   email: z.string().email("Email invalide"),

@@ -31,8 +31,10 @@ export default async function DashboardPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
         <h1 className="text-3xl font-bold">Tableau de bord</h1>
         <Button className="w-full sm:w-auto">
-          <Plus className="mr-2 size-4" />
-          Créer une tontine
+          <Link href="/dashboard/tontines/create" className="flex items-center">
+            <Plus className="mr-2 size-4" />
+            Créer une tontine
+          </Link>
         </Button>
       </div>
 
