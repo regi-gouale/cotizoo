@@ -16,6 +16,7 @@ import {
   HomeIcon,
   LayoutDashboardIcon,
   LogOutIcon,
+  MessageSquareTextIcon,
   SettingsIcon,
   UsersIcon,
 } from "lucide-react";
@@ -56,6 +57,11 @@ const sidebarNavItems: SidebarNavItem[] = [
     label: "Contacts",
     href: "/dashboard/contacts",
     icon: <UsersIcon className="size-4" />,
+  },
+  {
+    label: "Tickets",
+    href: "/dashboard/tickets",
+    icon: <MessageSquareTextIcon className="size-4" />,
   },
   {
     label: "Paramètres",

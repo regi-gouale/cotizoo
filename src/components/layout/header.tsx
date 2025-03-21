@@ -23,6 +23,7 @@ export const navigationItems: NavigationItem[] = [
   { label: "Fonctionnalités", href: "/#features" },
   { label: "Tarification", href: "/pricing" },
   { label: "À propos", href: "/about" },
+  { label: "Contact", href: "/contact" },
 ];
 
 function HeaderFallback() {
@@ -61,7 +62,7 @@ function BrandLogo() {
   );
 }
 
-function LoginOrDashboardButton() {
+export function LoginOrDashboardButton() {
   const { data: session, isPending } = authClient.useSession();
   const [isHovered, setIsHovered] = useState(false);
 
@@ -76,11 +77,11 @@ function LoginOrDashboardButton() {
   if (session) {
     return (
       <Button
-        variant="ghost"
+        variant="link"
         asChild
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        className="transition-all duration-200"
+        className="transition-all duration-200 font-semibold font-title"
       >
         <Link href="/dashboard" className="flex items-center gap-2">
           Tableau de bord
@@ -104,29 +105,6 @@ function LoginOrDashboardButton() {
     >
       <Link href="/auth/signin" className="flex items-center gap-2">
         Connexion
-        {isHovered ? (
-          <ArrowRight className="size-4" />
-        ) : (
-          <ChevronRight className="size-4" />
-        )}
-      </Link>
-    </Button>
-  );
-}
-
-function ContactButton() {
-  const [isHovered, setIsHovered] = useState(false);
-
-  return (
-    <Button
-      variant="default"
-      asChild
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className="transition-all duration-200"
-    >
-      <Link href="/contact" className="flex items-center gap-2">
-        Contacter notre équipe
         {isHovered ? (
           <ArrowRight className="size-4" />
         ) : (
@@ -161,7 +139,7 @@ function HeaderContent() {
         <div className="flex items-center gap-4">
           <div className="hidden md:flex items-center gap-2">
             <LoginOrDashboardButton />
-            <ContactButton />
+            {/* <ContactButton /> */}
           </div>
 
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
