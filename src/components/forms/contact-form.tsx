@@ -18,12 +18,16 @@ import {
   ContactFormSchema,
   ContactFormValues,
 } from "@/lib/schemas/contact.schema";
+import { ClipboardCheck } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 
 export function ContactForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [ticketId, setTicketId] = useState<string | null>(null);
+  const [ticketReference, setTicketReference] = useState<string | null>(null);
 
   const form = useZodForm({
     schema: ContactFormSchema,
@@ -44,16 +48,38 @@ export function ContactForm() {
         toast.success("Votre message a bien été envoyé");
         setIsSuccess(true);
         form.reset();
+
+        if (result.ticketId) {
+          setTicketId(result.ticketId);
+          setTicketReference(result.ticketId.substring(0, 8));
+        }
       } else {
-        toast.error(
-          result.error || "Une erreur est survenue lors de l'envoi du message",
-        );
+        if (result.ticketId) {
+          setTicketId(result.ticketId);
+          setTicketReference(result.ticketId.substring(0, 8));
+          toast.info(
+            "Votre demande a été enregistrée mais nous n'avons pas pu envoyer l'email de confirmation",
+          );
+          setIsSuccess(true);
+        } else {
+          toast.error(
+            result.error ||
+              "Une erreur est survenue lors de l'envoi du message",
+          );
+        }
       }
     } catch (error) {
       console.error("Erreur lors de l'envoi du message:", error);
       toast.error("Une erreur est survenue lors de l'envoi du message");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const copyTicketReference = () => {
+    if (ticketReference) {
+      navigator.clipboard.writeText(ticketReference);
+      toast.success("Référence copiée dans le presse-papier");
     }
   };
 
@@ -65,9 +91,45 @@ export function ContactForm() {
           Merci de nous avoir contacté. Notre équipe vous répondra dans les plus
           brefs délais.
         </p>
-        <Button onClick={() => setIsSuccess(false)}>
-          Envoyer un autre message
-        </Button>
+
+        {ticketReference && (
+          <div className="mb-6 mt-4 p-4 bg-background rounded-lg border border-border">
+            <h4 className="font-medium text-lg mb-1">
+              Référence de votre ticket
+            </h4>
+            <div className="flex items-center justify-center gap-2 mt-2">
+              <code className="bg-muted px-3 py-1 rounded text-lg font-mono">
+                #{ticketReference}
+              </code>
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-8 w-8"
+                onClick={copyTicketReference}
+                title="Copier la référence"
+              >
+                <ClipboardCheck className="h-4 w-4" />
+              </Button>
+            </div>
+            <p className="text-sm text-muted-foreground mt-2">
+              Conservez cette référence pour suivre votre demande
+            </p>
+          </div>
+        )}
+
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Button onClick={() => setIsSuccess(false)}>
+            Envoyer un autre message
+          </Button>
+
+          {ticketId && (
+            <Button variant="outline" asChild>
+              <Link href={`/dashboard/tickets/${ticketId}`}>
+                Suivre mon ticket
+              </Link>
+            </Button>
+          )}
+        </div>
       </div>
     );
   }

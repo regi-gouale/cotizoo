@@ -16,6 +16,7 @@ import {
   HomeIcon,
   LayoutDashboardIcon,
   LogOutIcon,
+  MessageSquareTextIcon,
   SettingsIcon,
   UsersIcon,
 } from "lucide-react";
@@ -46,6 +47,11 @@ const sidebarNavItems: SidebarNavItem[] = [
     label: "Paiements",
     href: "/dashboard/paiements",
     icon: <CreditCardIcon className="size-4" />,
+  },
+  {
+    label: "Tickets",
+    href: "/dashboard/tickets",
+    icon: <MessageSquareTextIcon className="size-4" />,
   },
   {
     label: "Notifications",

@@ -17,18 +17,20 @@ model Lead {
 }
 
 model User {
-  id            String           @id
-  name          String
-  email         String
-  emailVerified Boolean
-  image         String?
-  createdAt     DateTime
-  updatedAt     DateTime
-  sessions      Session[]
-  accounts      Account[]
-  tontines      UserTontine[]
-  transactions  Transaction[]
-  historyLogs   TontineHistory[]
+  id              String           @id
+  name            String
+  email           String
+  emailVerified   Boolean
+  image           String?
+  createdAt       DateTime
+  updatedAt       DateTime
+  sessions        Session[]
+  accounts        Account[]
+  tontines        UserTontine[]
+  transactions    Transaction[]
+  historyLogs     TontineHistory[]
+  tickets         Ticket[] // Relation avec les tickets
+  contactMessages ContactMessage[] // Relation avec les messages de contact
 
   @@unique([email])
   @@map("user")
@@ -147,6 +149,57 @@ model TontineHistory {
   @@map("tontine_history")
 }
 
+model ContactMessage {
+  id        String        @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String        @db.Text
+  ipAddress String?
+  userAgent String?
+  status    ContactStatus @default(NEW)
+  userId    String?
+  ticketId  String?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+  ticket Ticket? @relation(fields: [ticketId], references: [id], onDelete: SetNull)
+
+  @@map("contact_message")
+}
+
+model Ticket {
+  id           String         @id @default(cuid())
+  subject      String
+  status       TicketStatus   @default(OPEN)
+  priority     TicketPriority @default(NORMAL)
+  userId       String?
+  assignedToId String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  closedAt     DateTime?
+
+  user            User?            @relation(fields: [userId], references: [id], onDelete: SetNull)
+  contactMessages ContactMessage[]
+  ticketResponses TicketResponse[]
+
+  @@map("ticket")
+}
+
+model TicketResponse {
+  id          String   @id @default(cuid())
+  message     String   @db.Text
+  isFromStaff Boolean  @default(false)
+  ticketId    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  ticket Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  @@map("ticket_response")
+}
+
 enum TontineType {
   ROTATIF
   INVESTISSEMENT
@@ -198,4 +251,27 @@ enum TontineFrequency {
   QUARTERLY
   SEMIANNUAL
   YEARLY
+}
+
+enum ContactStatus {
+  NEW
+  READ
+  REPLIED
+  CONVERTED_TO_TICKET
+  ARCHIVED
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  WAITING_FOR_CUSTOMER
+  RESOLVED
+  CLOSED
+}
+
+enum TicketPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
 }
