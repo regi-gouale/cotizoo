@@ -1,0 +1,87 @@
+enum TontineType {
+  ROTATIF
+  INVESTISSEMENT
+  PROJET
+}
+
+enum TontineRole {
+  ADMIN
+  MEMBER
+}
+
+enum TontineStatus {
+  ACTIVE
+  COMPLETED
+  SUSPENDED
+}
+
+enum AllocationMethod {
+  FIXED
+  VOTE
+  RANDOM
+  ENCHERE
+}
+
+enum TransactionType {
+  COTISATION
+  REDISTRIBUTION
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+enum HistoryAction {
+  CREATION
+  JOIN
+  EXCLUSION
+  PAYMENT
+  RULES_UPDATED
+  REDISTRIBUTION
+}
+
+enum TontineFrequency {
+  WEEKLY
+  BIWEEKLY
+  MONTHLY
+  QUARTERLY
+  SEMIANNUAL
+  YEARLY
+}
+
+enum ContactStatus {
+  NEW
+  READ
+  REPLIED
+  CONVERTED_TO_TICKET
+  ARCHIVED
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  WAITING_FOR_CUSTOMER
+  RESOLVED
+  CLOSED
+}
+
+enum TicketPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  BANNED
+}
