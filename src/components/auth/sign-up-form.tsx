@@ -93,7 +93,6 @@ export function SignUpForm() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <SocialAuthButtons />
         <Form form={form} onSubmit={async (values) => await onSubmit(values)}>
           <div className="space-y-4">
             <FormField
@@ -157,6 +156,7 @@ export function SignUpForm() {
             </Button>
           </CardFooter>
         </Form>
+        <SocialAuthButtons />
       </CardContent>
       <CardFooter className="flex flex-col space-y-4 pt-0">
         <div className="text-sm text-center w-full">
