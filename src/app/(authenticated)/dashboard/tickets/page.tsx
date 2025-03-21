@@ -1,13 +1,12 @@
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { NewTicketButton } from "@/components/tickets/new-ticket-button";
+import { TicketFilters } from "@/components/tickets/ticket-filters";
+import { TicketList } from "@/components/tickets/ticket-list";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { TicketStatus } from "@prisma/client";
-import { formatDistanceToNow } from "date-fns";
-import { fr } from "date-fns/locale";
+import { TicketStatus, UserRole } from "@prisma/client";
 import { Metadata } from "next";
 import { headers } from "next/headers";
-import Link from "next/link";
+import { notFound, redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Mes tickets | Cotizoo",
@@ -31,7 +30,13 @@ const statusLabels: Record<
 export default async function TicketsPage() {
   const session = await auth.api.getSession({ headers: await headers() });
 
-  if (!session?.user.id) {
+  if (!session) {
+    redirect("/login");
+  }
+
+  // console.log("Status:", status);
+
+  if (!session.user.id) {
     return (
       <div className="flex items-center justify-center h-[50vh]">
         <p className="text-muted-foreground">
@@ -41,12 +46,34 @@ export default async function TicketsPage() {
     );
   }
 
-  const tickets = await prisma.ticket.findMany({
+  const user = await prisma.user.findUnique({
     where: {
-      userId: session.user.id,
+      id: session.user.id,
     },
+    select: {
+      role: true,
+      name: true,
+      email: true,
+    },
+  });
+
+  if (!user) {
+    return notFound();
+  }
+
+  const isAdmin =
+    user.role === UserRole.ADMIN || user.role === UserRole.SUPER_ADMIN;
+
+  // Filtrer les tickets selon le rôle de l'utilisateur
+  // Si l'utilisateur est admin, il peut voir tous les tickets
+  // Sinon, il ne peut voir que ses propres tickets
+  const where = isAdmin ? {} : { userId: session.user.id };
+
+  const tickets = await prisma.ticket.findMany({
+    where,
     orderBy: {
-      updatedAt: "desc",
+      updatedAt: "desc", // Uncommented to order by updatedAt
+      // status: "asc",
     },
     include: {
       contactMessages: {
@@ -58,94 +85,28 @@ export default async function TicketsPage() {
           createdAt: "desc",
         },
       },
+      user: true,
+      _count: {
+        select: {
+          ticketResponses: true,
+          contactMessages: true,
+        },
+      },
     },
   });
 
   return (
-    <div className="container px-4 py-8 mx-auto">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight mb-1">
-            Mes tickets
-          </h1>
-          <p className="text-muted-foreground">
-            Suivez vos demandes d'assistance et vos échanges avec notre équipe
-          </p>
+    <div className="container py-8 w-full max-w-4xl mx-auto">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+        <h1 className="text-2xl font-bold">Tickets</h1>
+        <div className="flex flex-wrap items-center gap-2">
+          <NewTicketButton />
         </div>
       </div>
 
-      {tickets.length === 0 ? (
-        <Card>
-          <CardContent className="flex flex-col items-center justify-center py-12">
-            <h3 className="text-xl font-semibold mb-2">Aucun ticket</h3>
-            <p className="text-center text-muted-foreground mb-6">
-              Vous n'avez pas encore créé de ticket d'assistance.
-              <br />
-              Vous pouvez nous contacter via la page de contact.
-            </p>
-            <Link
-              href="/contact"
-              className="inline-flex items-center justify-center h-10 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90"
-            >
-              Nous contacter
-            </Link>
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="space-y-4">
-          {tickets.map((ticket) => {
-            const statusConfig = statusLabels[ticket.status];
-            const latestMessage = ticket.contactMessages[0] || null;
-            const latestResponse = ticket.ticketResponses[0] || null;
-            const lastActivity =
-              latestResponse?.createdAt ||
-              latestMessage?.createdAt ||
-              ticket.createdAt;
+      <TicketFilters isAdmin={isAdmin} />
 
-            return (
-              <Card
-                key={ticket.id}
-                className="overflow-hidden hover:shadow-md transition-shadow"
-              >
-                <Link
-                  href={`/dashboard/tickets/${ticket.id}`}
-                  className="block"
-                >
-                  <CardHeader className="pb-0">
-                    <div className="flex justify-between items-start">
-                      <div className="space-y-1">
-                        <CardTitle className="font-medium">
-                          {ticket.subject}
-                        </CardTitle>
-                        <div className="text-sm text-muted-foreground">
-                          Ticket #{ticket.id.substring(0, 8)} • Créé il y a{" "}
-                          {formatDistanceToNow(new Date(ticket.createdAt), {
-                            addSuffix: false,
-                            locale: fr,
-                          })}
-                        </div>
-                      </div>
-                      <Badge variant={statusConfig.variant}>
-                        {statusConfig.label}
-                      </Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="pt-4">
-                    <div className="text-sm">
-                      <span className="font-medium">Dernière activité :</span>{" "}
-                      il y a{" "}
-                      {formatDistanceToNow(new Date(lastActivity), {
-                        addSuffix: false,
-                        locale: fr,
-                      })}
-                    </div>
-                  </CardContent>
-                </Link>
-              </Card>
-            );
-          })}
-        </div>
-      )}
+      <TicketList tickets={tickets as any} />
     </div>
   );
 }

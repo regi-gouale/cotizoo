@@ -22,6 +22,8 @@ model User {
   email           String
   emailVerified   Boolean
   image           String?
+  role            UserRole         @default(USER)
+  status          UserStatus       @default(ACTIVE)
   createdAt       DateTime
   updatedAt       DateTime
   sessions        Session[]
@@ -31,6 +33,7 @@ model User {
   historyLogs     TontineHistory[]
   tickets         Ticket[] // Relation avec les tickets
   contactMessages ContactMessage[] // Relation avec les messages de contact
+  comments        Comment[] // Relation avec les commentaires
 
   @@unique([email])
   @@map("user")
@@ -172,6 +175,7 @@ model ContactMessage {
 model Ticket {
   id           String         @id @default(cuid())
   subject      String
+  description  String? // Ajouté du second modèle, optionnel pour compatibilité
   status       TicketStatus   @default(OPEN)
   priority     TicketPriority @default(NORMAL)
   userId       String?
@@ -183,7 +187,9 @@ model Ticket {
   user            User?            @relation(fields: [userId], references: [id], onDelete: SetNull)
   contactMessages ContactMessage[]
   ticketResponses TicketResponse[]
+  comments        Comment[] // Ajouté du second modèle
 
+  @@index([userId])
   @@map("ticket")
 }
 
@@ -198,6 +204,22 @@ model TicketResponse {
   ticket Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
 
   @@map("ticket_response")
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  ticketId String
+  ticket   Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  userId   String
+  user     User   @relation(fields: [userId], references: [id])
+
+  @@index([ticketId])
+  @@index([userId])
+  @@map("comment")
 }
 
 enum TontineType {
@@ -274,4 +296,16 @@ enum TicketPriority {
   NORMAL
   HIGH
   URGENT
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  BANNED
 }
