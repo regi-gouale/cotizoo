@@ -49,11 +49,6 @@ const sidebarNavItems: SidebarNavItem[] = [
     icon: <CreditCardIcon className="size-4" />,
   },
   {
-    label: "Tickets",
-    href: "/dashboard/tickets",
-    icon: <MessageSquareTextIcon className="size-4" />,
-  },
-  {
     label: "Notifications",
     href: "/dashboard/notifications",
     icon: <BellIcon className="size-4" />,
@@ -62,6 +57,11 @@ const sidebarNavItems: SidebarNavItem[] = [
     label: "Contacts",
     href: "/dashboard/contacts",
     icon: <UsersIcon className="size-4" />,
+  },
+  {
+    label: "Tickets",
+    href: "/dashboard/tickets",
+    icon: <MessageSquareTextIcon className="size-4" />,
   },
   {
     label: "Paramètres",
