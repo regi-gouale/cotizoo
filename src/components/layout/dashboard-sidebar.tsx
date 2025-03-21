@@ -11,9 +11,9 @@ import {
 import { authClient } from "@/lib/auth-client";
 import {
   BellIcon,
+  CircleDollarSignIcon,
   CoinsIcon,
   CreditCardIcon,
-  HomeIcon,
   LayoutDashboardIcon,
   LogOutIcon,
   MessageSquareTextIcon,
@@ -41,7 +41,7 @@ const sidebarNavItems: SidebarNavItem[] = [
   {
     label: "Mes tontines",
     href: "/dashboard/tontines",
-    icon: <HomeIcon className="size-4" />,
+    icon: <CircleDollarSignIcon className="size-4" />,
   },
   {
     label: "Paiements",

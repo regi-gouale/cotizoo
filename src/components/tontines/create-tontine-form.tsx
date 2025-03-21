@@ -457,7 +457,7 @@ export function CreateTontineForm() {
     }
     console.log(result);
     toast.success("Tontine créée avec succès !");
-    router.push(`/tontines/${result.tontineId}`);
+    router.push(`/dashboard/tontines/${result.tontineId}`);
     setIsLoading(false);
   };
 

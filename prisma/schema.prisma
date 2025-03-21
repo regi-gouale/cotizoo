@@ -90,12 +90,12 @@ model Tontine {
   description           String
   type                  TontineType
   frequency             TontineFrequency @default(MONTHLY)
-  contributionPerMember Decimal
+  contributionPerMember Float
   startDate             DateTime
   endDate               DateTime
   maxMembers            Int
   status                TontineStatus    @default(ACTIVE)
-  penaltyFee            Decimal?         @default(5.0)
+  penaltyFee            Float?           @default(5.0)
   allocationMethod      AllocationMethod @default(FIXED)
   rules                 String?
   createdAt             DateTime         @default(now())
@@ -103,6 +103,7 @@ model Tontine {
   members               UserTontine[]
   transactions          Transaction[]
   historyLogs           TontineHistory[]
+  totalContributions    Float?           @default(0.0)
 
   @@map("tontine")
 }
@@ -125,7 +126,7 @@ model Transaction {
   id            String            @id @default(cuid())
   userId        String
   tontineId     String
-  amount        Decimal
+  amount        Float
   type          TransactionType
   status        TransactionStatus @default(PENDING)
   paymentMethod String?
