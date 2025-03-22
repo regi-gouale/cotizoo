@@ -17,6 +17,7 @@ model Tontine {
   members               UserTontine[]
   transactions          Transaction[]
   historyLogs           TontineHistory[]
+  invitations           Invitation[]
   totalContributions    Float?           @default(0.0)
 
   @@map("tontine")

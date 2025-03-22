@@ -1,0 +1,24 @@
+model Invitation {
+  id        String           @id @default(cuid())
+  email     String
+  token     String           @unique
+  tontineId String
+  role      TontineRole      @default(MEMBER)
+  status    InvitationStatus @default(PENDING)
+  expiresAt DateTime
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  createdBy String
+
+  tontine Tontine @relation(fields: [tontineId], references: [id], onDelete: Cascade)
+  inviter User    @relation(name: "invitationCreator", fields: [createdBy], references: [id])
+
+  @@map("invitation")
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  EXPIRED
+  CANCELLED
+}

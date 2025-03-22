@@ -16,6 +16,7 @@ model User {
   tickets         Ticket[] // Relation avec les tickets
   contactMessages ContactMessage[] // Relation avec les messages de contact
   comments        Comment[] // Relation avec les commentaires
+  invitationsSent Invitation[]     @relation("invitationCreator")
 
   @@unique([email])
   @@map("user")
