@@ -1,9 +1,7 @@
-import { TontinesList } from "@/components/tontines/tontines-list";
-import { Button } from "@/components/ui/button";
+import { TontineCards } from "@/components/tontines/tontines-list";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { headers } from "next/headers";
-import Link from "next/link";
 
 export default async function TontinesPage() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -30,15 +28,15 @@ export default async function TontinesPage() {
   }));
 
   return (
-    <div className="container py-6 space-y-6 w-full max-w-4xl mx-auto">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Mes tontines</h1>
+    <div className="@container/main flex flex-1 flex-col gap-2">
+      <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+        {/* <h1 className="text-3xl font-bold">Mes tontines</h1>
         <Button asChild>
           <Link href="/dashboard/tontines/create">Créer une tontine</Link>
-        </Button>
+        </Button> */}
       </div>
 
-      <TontinesList tontines={tontines} />
+      <TontineCards tontines={tontines} />
     </div>
   );
 }

@@ -1,7 +1,13 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { Tontine, TontineRole, TontineStatus } from "@prisma/client";
 import { CalendarIcon, CreditCardIcon } from "lucide-react";
@@ -15,7 +21,7 @@ type TontinesListProps = {
   tontines: TontineWithRole[];
 };
 
-export function TontinesList(props: TontinesListProps) {
+export function TontineCards(props: TontinesListProps) {
   const { tontines } = props;
 
   if (tontines.length === 0) {
@@ -90,18 +96,20 @@ export function TontinesList(props: TontinesListProps) {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
       {tontines.map((tontine) => {
         const nextDueDate = calculateNextDueDate(tontine);
 
         return (
           <Link href={`/dashboard/tontines/${tontine.id}`} key={tontine.id}>
-            <Card className="h-full hover:shadow-md transition-shadow duration-200">
-              <CardHeader className="pb-2">
-                <div className="flex items-center justify-between">
-                  <h3 className="font-semibold text-lg">{tontine.name}</h3>
+            <Card className="@container/card">
+              <CardHeader>
+                <CardDescription className="flex items-center justify-between">
+                  <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl text-primary">
+                    {tontine.name}
+                  </CardTitle>
                   {getStatusBadge(tontine.status, tontine.endDate)}
-                </div>
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -118,7 +126,7 @@ export function TontinesList(props: TontinesListProps) {
                     </div>
 
                     {tontine.role === "ADMIN" && (
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-right justify-end gap-2">
                         <Badge variant="secondary" className="h-6">
                           Admin
                         </Badge>
@@ -129,7 +137,7 @@ export function TontinesList(props: TontinesListProps) {
                       <div className="flex items-center gap-2">
                         <CalendarIcon className="h-4 w-4 text-muted-foreground" />
                         {nextDueDate ? (
-                          <span className="text-sm">
+                          <span className="text-sm text-muted-foreground">
                             Prochaine échéance: {formatDate(nextDueDate)}
                           </span>
                         ) : (
