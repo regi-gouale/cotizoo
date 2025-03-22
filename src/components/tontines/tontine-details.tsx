@@ -19,9 +19,19 @@ import {
   CalendarCheck,
   CalendarIcon,
   CreditCard,
+  PlusCircleIcon,
   Users,
 } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
+import { InviteMemberForm } from "./invite-member-form";
 
 type TontineFrequencyType =
   | "WEEKLY"
@@ -65,6 +75,7 @@ export function TontineDetails({
   userRole,
   statistics,
 }: TontineDetailsProps) {
+  const [isOpen, setIsOpen] = useState(false);
   // Mapper les types aux labels français
   const tontineTypes = {
     ROTATIF: "Tontine Rotative",
@@ -119,6 +130,10 @@ export function TontineDetails({
       .substring(0, 2);
   };
 
+  const handleSuccess = () => {
+    setIsOpen(false);
+  };
+
   return (
     <div className="space-y-6">
       {/* En-tête avec le nom de la tontine et le statut */}
@@ -143,9 +158,31 @@ export function TontineDetails({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-md font-medium flex items-center gap-2">
-              <Users size={18} />
-              Membres
+            <CardTitle className="text-md font-medium flex items-center gap-2 justify-between">
+              <div className="flex items-center gap-2">
+                <Users size={18} />
+                Membres
+              </div>
+              <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="text-primary-foreground dark:text-primary"
+                  >
+                    <PlusCircleIcon className="mr-2 h-4 w-4" />
+                    Ajouter
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle className="sr-only">Inscription</DialogTitle>
+                  </DialogHeader>
+                  <InviteMemberForm
+                    onSuccess={handleSuccess}
+                    tontineId={tontine.id}
+                  />
+                </DialogContent>
+              </Dialog>
             </CardTitle>
           </CardHeader>
           <CardContent>

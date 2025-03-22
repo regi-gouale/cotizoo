@@ -19,7 +19,7 @@ export default async function TontinePage({
   // Récupération des données de la tontine avec les membres et l'historique
   const tontine = await prisma.tontine.findUnique({
     where: {
-      id: params.id,
+      id: await params.id,
     },
     include: {
       members: {

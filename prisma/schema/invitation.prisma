@@ -1,5 +1,6 @@
 model Invitation {
   id        String           @id @default(cuid())
+  firstName String
   email     String
   token     String           @unique
   tontineId String
