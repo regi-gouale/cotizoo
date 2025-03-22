@@ -4,6 +4,7 @@ import { authAction } from "@/lib/actions/safe-actions";
 import { sendTemplateEmail } from "@/lib/email";
 import { getTontineInvitationHtml } from "@/lib/email-templates";
 import { prisma } from "@/lib/prisma";
+import { InvitationStatus, TontineRole } from "@prisma/client";
 import { z } from "zod";
 
 const InviteMemberSchema = z.object({
@@ -43,4 +44,56 @@ export const inviteMember = authAction
     );
 
     return invitation;
+  });
+
+export const acceptInvitationAction = authAction
+  .schema(
+    z.object({
+      token: z.string(),
+      tontineId: z.string(),
+    }),
+  )
+  .action(async ({ parsedInput: input, ctx }) => {
+    const invitation = await prisma.invitation.findUnique({
+      where: {
+        token: input.token,
+      },
+    });
+
+    if (!invitation) {
+      throw new Error("Invitation non trouvée");
+    }
+
+    if (invitation.expiresAt < new Date()) {
+      throw new Error("L'invitation a expiré");
+    }
+
+    const tontine = await prisma.tontine.findUnique({
+      where: {
+        id: input.tontineId,
+      },
+    });
+
+    if (!tontine) {
+      throw new Error("Tontine non trouvée");
+    }
+
+    await prisma.userTontine.create({
+      data: {
+        userId: ctx.user.id,
+        tontineId: input.tontineId,
+        role: TontineRole.MEMBER,
+      },
+    });
+
+    await prisma.invitation.update({
+      where: {
+        id: invitation.id,
+      },
+      data: {
+        status: InvitationStatus.ACCEPTED,
+      },
+    });
+
+    return { success: true };
   });
