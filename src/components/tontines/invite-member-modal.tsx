@@ -17,7 +17,7 @@ type SignupModalProps = {
   tontineId: string;
 };
 
-export function SignupModal(props: SignupModalProps) {
+export function TontineMemberInviteModal(props: SignupModalProps) {
   const { triggerText = "Je m'inscris", className } = props;
 
   const [isOpen, setIsOpen] = useState(false);

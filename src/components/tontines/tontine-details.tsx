@@ -397,9 +397,39 @@ export function TontineDetails({
             </CardContent>
             {userRole === "ADMIN" && statistics.remainingSlots > 0 && (
               <CardFooter>
-                <Button variant="outline" className="w-full">
+                {/* <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => {
+                    setIsOpen(true);
+                  }}
+                >
                   Inviter un membre
-                </Button>
+                </Button> */}
+                <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                  <div className="w-full flex items-center justify-center">
+                    <DialogTrigger asChild className="">
+                      <Button
+                        variant="outline"
+                        className="text-primary-foreground dark:text-primary"
+                      >
+                        <PlusCircleIcon className="mr-2 h-4 w-4" />
+                        Inviter un membre
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px]">
+                      <DialogHeader>
+                        <DialogTitle className="sr-only">
+                          Inviter un membre
+                        </DialogTitle>
+                      </DialogHeader>
+                      <InviteMemberForm
+                        onSuccess={handleSuccess}
+                        tontineId={tontine.id}
+                      />
+                    </DialogContent>
+                  </div>
+                </Dialog>
               </CardFooter>
             )}
           </Card>
