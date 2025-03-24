@@ -281,7 +281,6 @@ export function BeneficiaryOrderForm(props: {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // Here you would typically send the ordered beneficiaries to your backend
-    console.log("Submitted beneficiary order:", beneficiaries);
     const data = beneficiaries.map((b) => b.id);
     const result = await updateBeneficiaryOrder({
       tontineId: props.tontineId,
