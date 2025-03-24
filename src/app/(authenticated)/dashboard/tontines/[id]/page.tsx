@@ -1,4 +1,5 @@
 import { TontineDetails } from "@/components/tontines/tontine-details";
+import { updateExpiredTontineStatus } from "@/lib/actions/update-tontine-status.action";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { TontineStatus } from "@prisma/client";
@@ -15,6 +16,9 @@ export default async function TontinePage({
   if (!session) {
     return null;
   }
+
+  // Vérifier et mettre à jour les tontines expirées
+  await updateExpiredTontineStatus();
 
   // Récupération des données de la tontine avec les membres et l'historique
   const tontine = await prisma.tontine.findUnique({

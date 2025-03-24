@@ -34,8 +34,6 @@ export default async function TicketsPage() {
     redirect("/login");
   }
 
-  // console.log("Status:", status);
-
   if (!session.user.id) {
     return (
       <div className="flex items-center justify-center h-[50vh]">

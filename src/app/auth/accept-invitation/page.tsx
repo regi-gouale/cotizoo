@@ -70,10 +70,6 @@ export default function AcceptInvitationPage(props: PageParams) {
     }
   };
 
-  console.log("Session:", session);
-  console.log("Token:", token);
-  console.log("Tontine ID:", tontineId);
-
   // Si l'utilisateur n'est pas connecté mais que l'invitation a été acceptée
   if (isAccepted && !session) {
     return (

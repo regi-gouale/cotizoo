@@ -44,7 +44,7 @@ export default function RootLayout({
           "min-h-screen bg-background font-sans antialiased",
         )}
       >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <div className="relative flex min-h-screen flex-col">
             {/* <Header /> */}
             <main className="flex w-full mx-auto">{children}</main>

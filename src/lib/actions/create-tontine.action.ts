@@ -40,7 +40,7 @@ export async function createTontine(data: z.infer<typeof CreateTontineSchema>) {
   try {
     // Get the current authenticated user
     const session = await auth.api.getSession({ headers: await headers() });
-    // console.log("Session:", session);
+
     if (!session?.user?.id) {
       return {
         success: false,
