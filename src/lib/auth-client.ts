@@ -1,13 +1,7 @@
-import { stripeClient } from "@better-auth/stripe/client";
-import { createAuthClient } from "better-auth/client";
+import { createAuthClient } from "better-auth/react";
 
 export const authClient = createAuthClient({
-  baseURL: process.env.BASE_URL,
-  plugins: [
-    stripeClient({
-      subscription: true,
-    }),
-  ],
+  baseURL: process.env.BASE_URL, // the base url of your auth server
 });
 
 export const sendVerificationEmail = async (email: string) => {

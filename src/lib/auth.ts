@@ -4,14 +4,10 @@ import {
   getRegistrationEmailHtml,
 } from "@/lib/email-templates";
 import { prisma } from "@/lib/prisma";
-import { stripe } from "@better-auth/stripe";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import Stripe from "stripe";
 
 export class AuthError extends Error {}
-
-const stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, { provider: "postgresql" }),
@@ -52,11 +48,4 @@ export const auth = betterAuth({
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
     },
   },
-  plugins: [
-    stripe({
-      stripeClient,
-      stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET as string,
-      createCustomerOnSignUp: true,
-    }),
-  ],
 });
