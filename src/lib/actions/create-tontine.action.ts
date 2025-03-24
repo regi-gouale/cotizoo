@@ -1,20 +1,39 @@
 "use server";
 
 import { auth } from "@/lib/auth";
+import { sendTemplateEmail } from "@/lib/email";
+import { getTontineCreatedHtml } from "@/lib/email-templates";
+import { prisma } from "@/lib/prisma";
 import { CreateTontineSchema } from "@/lib/schemas/create-tontine.schema";
-import { Tontine, TontineStatus } from "@prisma/client";
+import { formatCurrency, formatDate } from "@/lib/utils";
+import { TontineFrequency, TontineStatus, TontineType } from "@prisma/client";
 import { headers } from "next/headers";
 import { z } from "zod";
-import { prisma } from "../prisma";
 
 export type CreateTontineInput = z.infer<typeof CreateTontineSchema>;
 
-type CreateTontineResult = {
-  success: boolean;
-  error?: string;
-  tontineId?: string;
-  data?: Tontine;
-};
+// Fonction utilitaire pour obtenir le libellé d'un type de tontine
+function getTontineTypeLabel(type: TontineType): string {
+  const types = {
+    ROTATIF: "Tontine Rotative",
+    INVESTISSEMENT: "Tontine d'Investissement",
+    PROJET: "Tontine de Projet",
+  };
+  return types[type] || type;
+}
+
+// Fonction utilitaire pour obtenir le libellé d'une fréquence
+function getTontineFrequencyLabel(frequency: TontineFrequency): string {
+  const frequencies = {
+    WEEKLY: "Hebdomadaire",
+    BIWEEKLY: "Bi-mensuelle",
+    MONTHLY: "Mensuelle",
+    QUARTERLY: "Trimestrielle",
+    SEMIANNUAL: "Semestrielle",
+    YEARLY: "Annuelle",
+  };
+  return frequencies[frequency] || frequency;
+}
 
 // Action sécurisée qui nécessite l'authentification
 export async function createTontine(data: z.infer<typeof CreateTontineSchema>) {
@@ -81,6 +100,26 @@ export async function createTontine(data: z.infer<typeof CreateTontineSchema>) {
         },
       },
     });
+
+    // Envoi de l'email de confirmation au créateur
+    const tontineUrl = `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/tontines/${tontine.id}`;
+
+    await sendTemplateEmail(
+      session.user.email,
+      `Confirmation de création de votre tontine "${tontine.name}"`,
+      getTontineCreatedHtml({
+        userName: session.user.name || "Utilisateur",
+        tontineName: tontine.name,
+        tontineType: getTontineTypeLabel(tontine.type),
+        startDate: formatDate(tontine.startDate),
+        endDate: formatDate(tontine.endDate),
+        frequency: getTontineFrequencyLabel(tontine.frequency),
+        contributionAmount: formatCurrency(tontine.contributionPerMember),
+        maxMembers: tontine.maxMembers,
+        tontineUrl: tontineUrl,
+      }),
+      {},
+    );
 
     return {
       success: true,

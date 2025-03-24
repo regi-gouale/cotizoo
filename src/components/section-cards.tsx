@@ -1,5 +1,5 @@
+import { DashboardSectionCard } from "@/components/dashboard/dashboard-section-card";
 import { CreditCardIcon, DollarSignIcon } from "lucide-react";
-import { DashboardSectionCard } from "./dashboard/dashboard-section-card";
 
 export function SectionCards() {
   return (

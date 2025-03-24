@@ -1,11 +1,11 @@
 "use client";
 
 import { type SidebarSubNavItem } from "@/components/layout/dashboard-sidebar";
+import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Suspense } from "react";
-import { SidebarMenuButton, SidebarMenuItem } from "../ui/sidebar";
 
 type DashboardItemsProps = {
   items: SidebarSubNavItem[];

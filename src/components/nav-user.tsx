@@ -8,6 +8,7 @@ import {
   IconUserCircle,
 } from "@tabler/icons-react";
 
+import { UserSidebarNavItem } from "@/components/layout/dashboard-sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -27,7 +28,6 @@ import {
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { UserSidebarNavItem } from "./layout/dashboard-sidebar";
 
 export function NavUser({ user }: { user: UserSidebarNavItem }) {
   const { isMobile } = useSidebar();

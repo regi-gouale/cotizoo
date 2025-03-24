@@ -1,5 +1,6 @@
 "use client";
 
+import { InviteMemberForm } from "@/components/tontines/invite-member-form";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -9,7 +10,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useState } from "react";
-import { InviteMemberForm } from "./invite-member-form";
 
 type SignupModalProps = {
   triggerText?: string;

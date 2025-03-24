@@ -1,7 +1,10 @@
 "use client";
 
-import { IconCirclePlusFilled, IconPlus } from "@tabler/icons-react";
+import { IconPlus } from "@tabler/icons-react";
 
+import { DashboardItems } from "@/components/dashboard/dashboard-items";
+import { SidebarSubNavItem } from "@/components/layout/dashboard-sidebar";
+import { Button } from "@/components/ui/button";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -9,11 +12,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import Link from "next/link";
-import { DashboardItems } from "./dashboard/dashboard-items";
-import { SidebarSubNavItem } from "./layout/dashboard-sidebar";
-import { Button } from "./ui/button";
 import { DollarSignIcon } from "lucide-react";
+import Link from "next/link";
 
 export function NavMain({ items }: { items: SidebarSubNavItem[] }) {
   return (
