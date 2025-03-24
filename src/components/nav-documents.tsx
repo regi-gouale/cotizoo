@@ -7,6 +7,7 @@ import {
   IconTrash,
 } from "@tabler/icons-react";
 
+import { SidebarSubNavItem } from "@/components/layout/dashboard-sidebar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,7 +24,6 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { SidebarSubNavItem } from "./layout/dashboard-sidebar";
 
 export function NavDocuments({ items }: { items: SidebarSubNavItem[] }) {
   const { isMobile } = useSidebar();

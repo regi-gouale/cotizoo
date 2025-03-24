@@ -4,14 +4,14 @@ import {
   LoginOrDashboardButton,
   type NavigationItem,
 } from "@/components/layout/header";
+import { NavigationItems } from "@/components/layout/navigation-items";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { Separator } from "@/components/ui/separator";
 import { SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { authClient } from "@/lib/auth-client";
 import { CoinsIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { Suspense, useState } from "react";
-import { Separator } from "../ui/separator";
-import { NavigationItems } from "./navigation-items";
 
 type MobileMenuProps = {
   navigationItems: NavigationItem[];

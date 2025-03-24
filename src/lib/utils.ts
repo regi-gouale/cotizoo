@@ -1,4 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -15,15 +17,9 @@ export function formatCurrency(amount: number): string {
   }).format(amount);
 }
 
-/**
- * Formate une date au format localisé français
- */
+// Fonction utilitaire pour formater la date
 export function formatDate(date: Date): string {
-  return new Intl.DateTimeFormat("fr-FR", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  }).format(date);
+  return format(date, "dd MMMM yyyy", { locale: fr });
 }
 
 /**

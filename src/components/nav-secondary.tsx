@@ -2,6 +2,7 @@
 
 import * as React from "react";
 
+import { SidebarSubNavItem } from "@/components/layout/dashboard-sidebar";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -10,7 +11,6 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
-import { SidebarSubNavItem } from "./layout/dashboard-sidebar";
 
 export function NavSecondary({
   items,

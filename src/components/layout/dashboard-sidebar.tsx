@@ -1,5 +1,9 @@
 "use client";
 
+import { NavDocuments } from "@/components/nav-documents";
+import { NavMain } from "@/components/nav-main";
+import { NavSecondary } from "@/components/nav-secondary";
+import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
   SidebarContent,
@@ -26,10 +30,6 @@ import Link from "next/link";
 import { redirect, usePathname, useRouter } from "next/navigation";
 import { ComponentProps } from "react";
 import { toast } from "sonner";
-import { NavMain } from "../nav-main";
-import { NavDocuments } from "../nav-documents";
-import { NavSecondary } from "../nav-secondary";
-import { NavUser } from "../nav-user";
 
 export type SidebarSubNavItem = {
   label: string;

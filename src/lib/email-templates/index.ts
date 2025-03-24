@@ -2,6 +2,7 @@ import { missedPaymentTemplate } from "@/lib/email-templates/missed-payment";
 import { passwordResetTemplate } from "@/lib/email-templates/password-reset";
 import { paymentNotificationTemplate } from "@/lib/email-templates/payment-notification";
 import { registrationTemplate } from "@/lib/email-templates/registration";
+import { tontineCreatedTemplate } from "@/lib/email-templates/tontine-created";
 import { tontineInvitationTemplate } from "@/lib/email-templates/tontine-invitation";
 
 // Templates d'emails disponibles
@@ -11,6 +12,7 @@ export const emailTemplates = {
   passwordReset: passwordResetTemplate,
   paymentNotification: paymentNotificationTemplate,
   missedPayment: missedPaymentTemplate,
+  tontineCreated: tontineCreatedTemplate,
 };
 
 // Fonctions pour envoyer les emails avec les templates
@@ -49,6 +51,20 @@ export function getMissedPaymentHtml(variables: {
   dueDate: string;
 }): string {
   return missedPaymentTemplate(variables);
+}
+
+export function getTontineCreatedHtml(variables: {
+  userName: string;
+  tontineName: string;
+  tontineType: string;
+  startDate: string;
+  endDate: string;
+  frequency: string;
+  contributionAmount: string;
+  maxMembers: number;
+  tontineUrl: string;
+}): string {
+  return tontineCreatedTemplate(variables);
 }
 
 // Helper pour créer un layout HTML commun
