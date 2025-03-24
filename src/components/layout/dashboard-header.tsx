@@ -1,6 +1,5 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -9,21 +8,78 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ButtonLoading } from "@/components/ui/loading";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { authClient } from "@/lib/auth-client";
-import { BellIcon, CoinsIcon } from "lucide-react";
+import { prisma } from "@/lib/prisma";
+import { BellIcon } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Separator } from "../ui/separator";
 
-export function DashboardHeader(props: {
-  user: { name?: string | null; email?: string | null; image?: string | null };
-}) {
+export function DashboardHeader() {
   const router = useRouter();
-  const { user } = props;
-  const displayName = user.name || user.email?.split("@")[0] || "Utilisateur";
+  const pathname = usePathname();
+
+  // Get breadcrumbs from the pathname
+  // Example: "/dashboard/tontines/[:id]" => [{ name: "Tableau de bord", isActive: false }, { name: "Mes tontines", isActive: false }, { name: "Ma tontine", isActive: true }]
+  const breadcrumbs = pathname
+    .split("/")
+    .filter((path) => path !== "")
+    .map((path, index, arr) => {
+      const isActive = index === arr.length - 1;
+      const href = `/${arr.slice(0, index + 1).join("/")}`;
+      const name = path.charAt(0).toUpperCase() + path.slice(1);
+      if (name === "Dashboard") {
+        return {
+          name: "Tableau de bord",
+          href: "/dashboard",
+          isActive,
+        };
+      }
+      if (name === "Tontines") {
+        return {
+          name: "Mes tontines",
+          href: "/dashboard/tontines",
+          isActive,
+        };
+      }
+      if (name === "Settings") {
+        return {
+          name: "Paramètres",
+          href: "/dashboard/settings",
+          isActive,
+        };
+      }
+      if (name === "Notifications") {
+        return {
+          name: "Notifications",
+          href: "/dashboard/notifications",
+          isActive,
+        };
+      }
+      if (name === "Profil") {
+        return {
+          name: "Mon profil",
+          href: "/dashboard/settings/profil",
+          isActive,
+        };
+      }
+      if (name === "Messages") {
+        return {
+          name: "Mes messages",
+          href: "/dashboard/messages",
+          isActive,
+        };
+      }
+
+      return {
+        name,
+        href,
+        isActive,
+      };
+    });
 
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [notificationCount, setNotificationCount] = useState(2); // Exemple: 2 notifications
@@ -42,25 +98,37 @@ export function DashboardHeader(props: {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <SidebarTrigger className="-ml-1" />
-          <div className="flex items-center gap-3">
-            <div className="md:hidden">
-              <SidebarTrigger />
-            </div>
-            <Link
-              href="/dashboard"
-              className="font-bold text-xl font-mono flex items-center text-primary"
-            >
-              cotiz
-              <CoinsIcon className="ml-0.5 size-4 text-primary rotate-90" />
-            </Link>
-          </div>
-        </div>
+    <header className="sticky top-0 flex h-(--header-height) shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height) z-40 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="flex w-full items-center gap-1 px-4 lg:gap-2 lg:px-6">
+        <SidebarTrigger className="-ml-1" />
+        <Separator
+          orientation="vertical"
+          className="mx-2 data-[orientation=vertical]:h-4"
+        />
 
-        <div className="flex items-center gap-2">
+        {/* Breadcrumbs */}
+        {/* Display the first breadcrumb as a link and add separator */}
+        <h1 className="text-base font-medium">
+          {breadcrumbs.map((b, index) => (
+            <span key={index}>
+              {b.isActive ? b.name : <Link href={b.href}>{b.name}</Link>}
+              {index < breadcrumbs.length - 1 && (
+                <span className="mx-2 text-muted-foreground">/</span>
+              )}
+            </span>
+          ))}
+        </h1>
+        {/* <h1 className="text-base font-medium">
+          {breadcrumbs.map((b) =>
+            b.isActive ? (
+              b.name
+            ) : (
+              <Link href={`/${b.name.toLowerCase()}`}>{b.name}</Link>
+            ),
+          )}
+        </h1> */}
+
+        <div className="flex ml-auto items-center gap-2">
           {/* Notification icon with badge */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -123,7 +191,7 @@ export function DashboardHeader(props: {
           </DropdownMenu>
 
           {/* User dropdown menu */}
-          <DropdownMenu>
+          {/* <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Avatar className="h-8 w-8 cursor-pointer bg-primary/10">
                 {user.image ? (
@@ -176,7 +244,7 @@ export function DashboardHeader(props: {
                 )}
               </DropdownMenuItem>
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu> */}
         </div>
       </div>
     </header>

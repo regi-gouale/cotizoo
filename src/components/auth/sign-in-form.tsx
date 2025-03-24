@@ -33,7 +33,12 @@ const SignInSchema = z.object({
   password: z.string().min(1, "Mot de passe requis"),
 });
 
-export function SignInForm() {
+type SignInFormProps = {
+  invitationToken?: string;
+  tontineId?: string;
+};
+
+export function SignInForm({ invitationToken, tontineId }: SignInFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -53,7 +58,10 @@ export function SignInForm() {
         {
           email: data.email,
           password: data.password,
-          callbackURL: "/dashboard",
+          // Rediriger vers la page d'invitation si un token est fourni, sinon vers le tableau de bord
+          callbackURL: invitationToken
+            ? `/auth/accept-invitation?token=${invitationToken}&tontineId=${tontineId || ""}`
+            : "/dashboard",
         },
         {
           onRequest: () => {
@@ -61,7 +69,6 @@ export function SignInForm() {
           },
           onSuccess: () => {
             toast.success("Connexion réussie!");
-            // redirect("/dashboard");
           },
           onError: (ctx) => {
             // Gestion spécifique pour l'email non vérifié (status 403)
@@ -93,7 +100,9 @@ export function SignInForm() {
       <CardHeader>
         <CardTitle className="text-center">Se connecter</CardTitle>
         <CardDescription>
-          Connectez-vous pour accéder à votre tableau de bord
+          {invitationToken
+            ? "Connectez-vous pour accepter l'invitation à la tontine"
+            : "Connectez-vous pour accéder à votre tableau de bord"}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -153,12 +162,22 @@ export function SignInForm() {
             </Button>
           </CardFooter>
         </Form>
-        <SocialAuthButtons />
+        <SocialAuthButtons
+          invitationToken={invitationToken}
+          tontineId={tontineId}
+        />
       </CardContent>
       <CardFooter className="flex flex-col space-y-4 pt-0">
         <div className="text-sm text-center w-full">
           Pas encore de compte?{" "}
-          <Link href="/auth/signup" className="text-primary hover:underline">
+          <Link
+            href={
+              invitationToken
+                ? `/auth/signup?token=${invitationToken}&tontineId=${tontineId || ""}`
+                : "/auth/signup"
+            }
+            className="text-primary hover:underline"
+          >
             Créer un compte
           </Link>
         </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { type SidebarNavItem } from "@/components/layout/dashboard-sidebar";
+import { type SidebarSubNavItem } from "@/components/layout/dashboard-sidebar";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -8,7 +8,7 @@ import { Suspense } from "react";
 import { SidebarMenuButton, SidebarMenuItem } from "../ui/sidebar";
 
 type DashboardItemsProps = {
-  items: SidebarNavItem[];
+  items: SidebarSubNavItem[];
   className?: string;
 };
 
@@ -44,7 +44,7 @@ function DashboardItemsContent({ items, className }: DashboardItemsProps) {
               isActive(item.href)
                 ? "bg-muted/30 text-foreground"
                 : "text-muted-foreground",
-              "group flex items-center gap-4 rounded-md p-2 text-sm font-medium transition-colors hover:bg-muted/30 hover:text-foreground",
+              "group flex items-center gap-4 rounded-md text-sm font-medium transition-colors hover:bg-muted/30 hover:text-foreground",
             )}
           >
             <Link href={item.href} className="flex w-full gap-4">

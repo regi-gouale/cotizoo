@@ -1,0 +1,69 @@
+model Tontine {
+  id                    String           @id @default(cuid())
+  name                  String
+  description           String
+  type                  TontineType
+  frequency             TontineFrequency @default(MONTHLY)
+  contributionPerMember Float
+  startDate             DateTime
+  endDate               DateTime
+  maxMembers            Int
+  status                TontineStatus    @default(ACTIVE)
+  penaltyFee            Float?           @default(5.0)
+  allocationMethod      AllocationMethod @default(FIXED)
+  rules                 String?
+  createdAt             DateTime         @default(now())
+  updatedAt             DateTime         @updatedAt
+  members               UserTontine[]
+  transactions          Transaction[]
+  historyLogs           TontineHistory[]
+  invitations           Invitation[]
+  totalContributions    Float?           @default(0.0)
+
+  @@map("tontine")
+}
+
+model UserTontine {
+  id        String      @id @default(cuid())
+  userId    String
+  tontineId String
+  role      TontineRole @default(MEMBER)
+  joinedAt  DateTime    @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tontine Tontine @relation(fields: [tontineId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, tontineId])
+  @@map("user_tontine")
+}
+
+model Transaction {
+  id            String            @id @default(cuid())
+  userId        String
+  tontineId     String
+  amount        Float
+  type          TransactionType
+  status        TransactionStatus @default(PENDING)
+  paymentMethod String?
+  reference     String?
+  createdAt     DateTime          @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tontine Tontine @relation(fields: [tontineId], references: [id], onDelete: Cascade)
+
+  @@map("transaction")
+}
+
+model TontineHistory {
+  id        String        @id @default(cuid())
+  tontineId String
+  userId    String?
+  action    HistoryAction
+  details   String?
+  createdAt DateTime      @default(now())
+
+  tontine Tontine @relation(fields: [tontineId], references: [id], onDelete: Cascade)
+  user    User?   @relation(fields: [userId], references: [id])
+
+  @@map("tontine_history")
+}

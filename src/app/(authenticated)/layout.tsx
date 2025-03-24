@@ -35,15 +35,18 @@ export default async function DashboardLayout({
       defaultOpen={true}
       style={
         {
-          "--sidebar-width": "19rem",
+          "--sidebar-width": "calc(var(--spacing) * 72)",
+          "--header-height": "calc(var(--spacing) * 12)",
+          "--footer-height": "calc(var(--spacing) * 10)",
         } as CSSProperties
       }
     >
       <DashboardSidebar />
-
       <SidebarInset className="w-full">
-        <DashboardHeader user={user} />
-        <main className="flex-1 overflow-auto p-4 md:p-6">{children}</main>
+        <DashboardHeader />
+        <main className="flex flex-1 flex-col overflow-auto p-4 md:p-6">
+          {children}
+        </main>
       </SidebarInset>
     </SidebarProvider>
   );

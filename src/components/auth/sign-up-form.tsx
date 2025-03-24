@@ -36,7 +36,12 @@ const SignUpSchema = z.object({
     .min(8, "Le mot de passe doit contenir au moins 8 caractères"),
 });
 
-export function SignUpForm() {
+type SignUpFormProps = {
+  invitationToken?: string;
+  tontineId?: string;
+};
+
+export function SignUpForm({ invitationToken, tontineId }: SignUpFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -58,7 +63,10 @@ export function SignUpForm() {
           email: data.email,
           password: data.password,
           name: data.name,
-          callbackURL: "/dashboard",
+          // Rediriger vers la page d'invitation si un token est fourni, sinon vers le dashboard
+          callbackURL: invitationToken
+            ? `/auth/accept-invitation?token=${invitationToken}&tontineId=${tontineId || ""}`
+            : "/dashboard",
         },
         {
           onRequest: () => {
@@ -89,7 +97,9 @@ export function SignUpForm() {
       <CardHeader>
         <CardTitle className="text-center">Créer un compte</CardTitle>
         <CardDescription>
-          Inscrivez-vous pour accéder à votre tableau de bord
+          {invitationToken
+            ? "Inscrivez-vous pour accepter l'invitation à la tontine"
+            : "Inscrivez-vous pour accéder à votre tableau de bord"}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -156,12 +166,22 @@ export function SignUpForm() {
             </Button>
           </CardFooter>
         </Form>
-        <SocialAuthButtons />
+        <SocialAuthButtons
+          invitationToken={invitationToken}
+          tontineId={tontineId}
+        />
       </CardContent>
       <CardFooter className="flex flex-col space-y-4 pt-0">
         <div className="text-sm text-center w-full">
           Vous avez déjà un compte?{" "}
-          <Link href="/auth/signin" className="text-primary hover:underline">
+          <Link
+            href={
+              invitationToken
+                ? `/auth/signin?token=${invitationToken}&tontineId=${tontineId || ""}`
+                : "/auth/signin"
+            }
+            className="text-primary hover:underline"
+          >
             Se connecter
           </Link>
         </div>

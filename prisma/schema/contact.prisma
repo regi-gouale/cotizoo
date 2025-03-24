@@ -1,0 +1,69 @@
+model ContactMessage {
+  id        String        @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String        @db.Text
+  ipAddress String?
+  userAgent String?
+  status    ContactStatus @default(NEW)
+  userId    String?
+  ticketId  String?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+  ticket Ticket? @relation(fields: [ticketId], references: [id], onDelete: SetNull)
+
+  @@map("contact_message")
+}
+
+model Ticket {
+  id           String         @id @default(cuid())
+  subject      String
+  description  String? // Ajouté du second modèle, optionnel pour compatibilité
+  status       TicketStatus   @default(OPEN)
+  priority     TicketPriority @default(NORMAL)
+  userId       String?
+  assignedToId String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  closedAt     DateTime?
+
+  user            User?            @relation(fields: [userId], references: [id], onDelete: SetNull)
+  contactMessages ContactMessage[]
+  ticketResponses TicketResponse[]
+  comments        Comment[] // Ajouté du second modèle
+
+  @@index([userId])
+  @@map("ticket")
+}
+
+model TicketResponse {
+  id          String   @id @default(cuid())
+  message     String   @db.Text
+  isFromStaff Boolean  @default(false)
+  ticketId    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  ticket Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  @@map("ticket_response")
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  ticketId String
+  ticket   Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  userId   String
+  user     User   @relation(fields: [userId], references: [id])
+
+  @@index([ticketId])
+  @@index([userId])
+  @@map("comment")
+}
