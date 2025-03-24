@@ -1,23 +1,23 @@
 model User {
-  id              String           @id
-  name            String
-  email           String
-  emailVerified   Boolean
-  image           String?
-  role            UserRole         @default(USER)
-  status          UserStatus       @default(ACTIVE)
-  createdAt       DateTime
-  updatedAt       DateTime
-  stripeMandateId String? // Identifiant du mandat Stripe
-  sessions        Session[]
-  accounts        Account[]
-  tontines        UserTontine[]
-  transactions    Transaction[]
-  historyLogs     TontineHistory[]
-  tickets         Ticket[] // Relation avec les tickets
-  contactMessages ContactMessage[] // Relation avec les messages de contact
-  comments        Comment[] // Relation avec les commentaires
-  invitationsSent Invitation[]     @relation("invitationCreator")
+  id               String           @id
+  name             String
+  email            String
+  emailVerified    Boolean
+  image            String?
+  role             UserRole         @default(USER)
+  status           UserStatus       @default(ACTIVE)
+  createdAt        DateTime
+  updatedAt        DateTime
+  stripeCustomerId String? // Identifiant du client Stripe
+  sessions         Session[]
+  accounts         Account[]
+  tontines         UserTontine[]
+  transactions     Transaction[]
+  historyLogs      TontineHistory[]
+  tickets          Ticket[] // Relation avec les tickets
+  contactMessages  ContactMessage[] // Relation avec les messages de contact
+  comments         Comment[] // Relation avec les commentaires
+  invitationsSent  Invitation[]     @relation("invitationCreator")
 
   @@unique([email])
   @@map("user")
