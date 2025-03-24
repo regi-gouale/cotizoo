@@ -111,6 +111,16 @@ export const acceptInvitationAction = authAction
           role: invitation.role || TontineRole.MEMBER,
         },
       });
+
+      // Ajout dans l'historique de la tontine
+      await prisma.tontineHistory.create({
+        data: {
+          tontineId: tontine.id,
+          userId: ctx.user.id,
+          action: "JOIN",
+          details: `${ctx.user.name} a rejoint la tontine.`,
+        },
+      });
     }
 
     // Mise à jour du statut de l'invitation
