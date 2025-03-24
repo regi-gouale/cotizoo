@@ -20,6 +20,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { updateMemberRole } from "@/lib/actions/update-member-role.action";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { TontineRole, TontineStatus } from "@prisma/client";
 import {
@@ -31,7 +32,9 @@ import {
   Users,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 
 type TontineFrequencyType =
   | "WEEKLY"
@@ -76,6 +79,34 @@ export function TontineDetails({
   statistics,
 }: TontineDetailsProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
+
+  // const mutation = useMutation({
+  //   mutationFn: async (data: {
+  //     tontineId: string;
+  //     memberId: string;
+  //     newRole: TontineRole;
+  //   }) => updateMemberRole(data),
+  //   onError: (error) => toast.error(error.message),
+  //   onSuccess: () => {
+  //     toast.success("Rôle du membre mis à jour !");
+  //   },
+  // });
+
+  const handleRoleChange = async (memberId: string, newRole: TontineRole) => {
+    const result = await updateMemberRole({
+      tontineId: tontine.id,
+      memberId,
+      newRole,
+    });
+    if (result) {
+      toast.success("Rôle du membre mis à jour !");
+      router.refresh();
+    } else {
+      toast.error("Erreur lors de la mise à jour du rôle du membre");
+    }
+  };
+
   // Mapper les types aux labels français
   const tontineTypes = {
     ROTATIF: "Tontine Rotative",
@@ -386,11 +417,24 @@ export function TontineDetails({
                         </p>
                       </div>
                     </div>
-                    <Badge
-                      variant={member.role === "ADMIN" ? "default" : "outline"}
-                    >
-                      {member.role === "ADMIN" ? "Admin" : "Membre"}
-                    </Badge>
+                    <div className="flex items-center gap-2">
+                      <Badge
+                        variant={
+                          member.role === "ADMIN" ? "default" : "outline"
+                        }
+                      >
+                        {member.role === "ADMIN" ? "Admin" : "Membre"}
+                      </Badge>
+                      {userRole === "ADMIN" && member.role !== "ADMIN" && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleRoleChange(member.id, "ADMIN")}
+                        >
+                          Définir comme Admin
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
