@@ -18,27 +18,23 @@ export function TontineFilters() {
 
   // Récupérer les filtres actifs depuis les paramètres URL
   const status = searchParams.get("status")?.split(",") || [];
-  const showActive = !status.length || status.includes(TontineStatus.ACTIVE);
-  const showSuspended =
-    !status.length || status.includes(TontineStatus.SUSPENDED);
-  const showCompleted =
-    !status.length || status.includes(TontineStatus.COMPLETED);
+  const showActive =
+    status.length === 0 || status.includes(TontineStatus.ACTIVE);
+  const showSuspended = status.includes(TontineStatus.SUSPENDED);
+  const showCompleted = status.includes(TontineStatus.COMPLETED);
+  const showAllStatuses = status.length === 0;
 
   // Fonction pour mettre à jour les filtres
   const updateFilters = useCallback(
-    (newFilters: TontineStatusFilters) => {
+    (selectedStatus: TontineStatus | null) => {
       const params = new URLSearchParams(searchParams);
-      const statusFilters = [];
 
-      if (newFilters.active) statusFilters.push(TontineStatus.ACTIVE);
-      if (newFilters.suspended) statusFilters.push(TontineStatus.SUSPENDED);
-      if (newFilters.completed) statusFilters.push(TontineStatus.COMPLETED);
-
-      // Si tous les filtres sont activés ou aucun, on retire le paramètre status
-      if (statusFilters.length === 3 || statusFilters.length === 0) {
+      // Si null, on retire le paramètre status pour afficher toutes les tontines
+      if (selectedStatus === null) {
         params.delete("status");
       } else {
-        params.set("status", statusFilters.join(","));
+        // Sinon, on définit uniquement le statut sélectionné
+        params.set("status", selectedStatus);
       }
 
       router.push(`${pathname}?${params.toString()}`);
@@ -49,14 +45,12 @@ export function TontineFilters() {
   return (
     <div className="flex flex-wrap gap-2 mb-4">
       <Button
-        variant={showActive ? "default" : "outline"}
+        variant={showActive && !showAllStatuses ? "default" : "outline"}
         size="sm"
         onClick={() =>
-          updateFilters({
-            active: !showActive,
-            suspended: showSuspended,
-            completed: showCompleted,
-          })
+          updateFilters(
+            showActive && !showAllStatuses ? null : TontineStatus.ACTIVE,
+          )
         }
       >
         En cours
@@ -65,11 +59,7 @@ export function TontineFilters() {
         variant={showSuspended ? "default" : "outline"}
         size="sm"
         onClick={() =>
-          updateFilters({
-            active: showActive,
-            suspended: !showSuspended,
-            completed: showCompleted,
-          })
+          updateFilters(showSuspended ? null : TontineStatus.SUSPENDED)
         }
       >
         Suspendues
@@ -78,24 +68,14 @@ export function TontineFilters() {
         variant={showCompleted ? "default" : "outline"}
         size="sm"
         onClick={() =>
-          updateFilters({
-            active: showActive,
-            suspended: showSuspended,
-            completed: !showCompleted,
-          })
+          updateFilters(showCompleted ? null : TontineStatus.COMPLETED)
         }
       >
         Terminées
       </Button>
-      {status.length > 0 && (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() =>
-            updateFilters({ active: true, suspended: true, completed: true })
-          }
-        >
-          Réinitialiser
+      {!showAllStatuses && (
+        <Button variant="ghost" size="sm" onClick={() => updateFilters(null)}>
+          Tout afficher
         </Button>
       )}
     </div>
