@@ -23,6 +23,7 @@ export function getRegistrationEmailHtml(variables: {
 
 export function getTontineInvitationHtml(variables: {
   inviterName: string;
+  guestName: string;
   tontineName: string;
   invitationUrl: string;
 }): string {

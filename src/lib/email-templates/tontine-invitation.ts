@@ -2,13 +2,14 @@ import { createEmailLayout } from "@/lib/email-templates/index";
 
 export function tontineInvitationTemplate(variables: {
   inviterName: string;
+  guestName: string;
   tontineName: string;
   invitationUrl: string;
 }): string {
   const content = `
     <h2>Invitation à rejoindre une tontine</h2>
     <p>
-      Bonjour,
+      Bonjour ${variables.guestName} ,
     </p>
     <p>
       <strong>${variables.inviterName}</strong> vous invite à rejoindre la tontine <strong>"${variables.tontineName}"</strong> sur {{siteName}}.

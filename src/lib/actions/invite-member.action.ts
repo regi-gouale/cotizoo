@@ -17,7 +17,18 @@ export const inviteMember = authAction
   .schema(InviteMemberSchema)
   .action(async ({ parsedInput: input, ctx }) => {
     const token = crypto.randomUUID();
-    const invitationUrl = `${process.env.NEXT_PUBLIC_APP_URL}/auth/accept-invitation?token=${token}`;
+    const invitationUrl = `${process.env.NEXT_PUBLIC_APP_URL}/auth/accept-invitation?token=${token}&tontineId=${input.tontineId}`;
+
+    // Récupérer les informations sur la tontine
+    const tontine = await prisma.tontine.findUnique({
+      where: {
+        id: input.tontineId,
+      },
+    });
+
+    if (!tontine) {
+      throw new Error("Tontine non trouvée");
+    }
 
     const invitation = await prisma.invitation.create({
       data: {
@@ -32,13 +43,14 @@ export const inviteMember = authAction
 
     const emailHtml = getTontineInvitationHtml({
       inviterName: ctx.user.name,
-      tontineName: "Nom de la Tontine", // Remplacer par le nom réel de la tontine
+      guestName: input.firstName,
+      tontineName: tontine.name,
       invitationUrl,
     });
 
     await sendTemplateEmail(
       input.email,
-      "Invitation à rejoindre une tontine",
+      `Invitation à rejoindre la tontine "${tontine.name}"`,
       emailHtml,
       {},
     );
@@ -59,7 +71,7 @@ export const acceptInvitationAction = authAction
         token: input.token,
       },
     });
-
+    console.log("Invitation trouvée:", invitation);
     if (!invitation) {
       throw new Error("Invitation non trouvée");
     }
@@ -70,7 +82,7 @@ export const acceptInvitationAction = authAction
 
     const tontine = await prisma.tontine.findUnique({
       where: {
-        id: input.tontineId,
+        id: input.tontineId || invitation.tontineId,
       },
     });
 
@@ -78,15 +90,29 @@ export const acceptInvitationAction = authAction
       throw new Error("Tontine non trouvée");
     }
 
-    await prisma.userTontine.create({
-      data: {
+    // Vérifier si l'utilisateur est déjà membre de la tontine
+    const existingMembership = await prisma.userTontine.findFirst({
+      where: {
         userId: ctx.user.id,
-        tontineId: input.tontineId,
-        role: TontineRole.MEMBER,
+        tontineId: tontine.id,
       },
     });
 
-    await prisma.invitation.update({
+    if (!existingMembership) {
+      // Création de la relation entre l'utilisateur et la tontine
+      const member = await prisma.userTontine.create({
+        data: {
+          userId: ctx.user.id,
+          tontineId: tontine.id,
+          role: invitation.role || TontineRole.MEMBER,
+        },
+      });
+
+      console.log("New member added:", member);
+    }
+
+    // Mise à jour du statut de l'invitation
+    const invitationUpdate = await prisma.invitation.update({
       where: {
         id: invitation.id,
       },
@@ -94,6 +120,10 @@ export const acceptInvitationAction = authAction
         status: InvitationStatus.ACCEPTED,
       },
     });
+    console.log("Invitation updated:", invitationUpdate);
 
-    return { success: true };
+    return {
+      success: true,
+      tontineId: tontine.id,
+    };
   });
