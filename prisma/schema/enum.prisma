@@ -40,6 +40,8 @@ enum HistoryAction {
   PAYMENT
   RULES_UPDATED
   REDISTRIBUTION
+  SUSPENSION
+  BENEFICIARY_ORDER
 }
 
 enum TontineFrequency {

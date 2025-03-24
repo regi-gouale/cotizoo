@@ -28,8 +28,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { createTontine } from "@/lib/actions/create-tontine.action";
-import { CreateTontineSchema } from "@/lib/schemas/create-tontine.schema";
+import { updateTontine } from "@/lib/actions/update-tontine.action";
+import { UpdateTontineSchema } from "@/lib/schemas/update-tontine.schema";
 import {
   AllocationMethod,
   TontineFrequency,
@@ -40,12 +40,14 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 
+// Options pour les types de tontines
 const tontineTypes = [
   { label: "Rotatif", value: TontineType.ROTATIF },
   { label: "Investissement", value: TontineType.INVESTISSEMENT },
   { label: "Projet", value: TontineType.PROJET },
 ];
 
+// Options pour les fréquences
 const tontineFrequencies = [
   { label: "Hebdomadaire", value: TontineFrequency.WEEKLY },
   { label: "Bi-mensuelle", value: TontineFrequency.BIWEEKLY },
@@ -54,6 +56,8 @@ const tontineFrequencies = [
   { label: "Semestrielle", value: TontineFrequency.SEMIANNUAL },
   { label: "Annuelle", value: TontineFrequency.YEARLY },
 ];
+
+// Options pour les méthodes d'allocation
 const allocationMethods = [
   { label: "Fixe", value: AllocationMethod.FIXED },
   { label: "Vote", value: AllocationMethod.VOTE },
@@ -61,56 +65,80 @@ const allocationMethods = [
   { label: "Enchère", value: AllocationMethod.ENCHERE },
 ];
 
-export function CreateTontineForm() {
+// Définir le type pour les propriétés du composant
+type TontineSettingsFormProps = {
+  tontine: {
+    id: string;
+    name: string;
+    description: string;
+    type: TontineType;
+    frequency: TontineFrequency;
+    contributionPerMember: number;
+    maxMembers: number;
+    startDate: Date;
+    endDate: Date;
+    penaltyFee: number | null;
+    allocationMethod: AllocationMethod;
+    rules: string | null;
+  };
+};
+
+export function TontineSettingsForm({ tontine }: TontineSettingsFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
+  // Initialiser le formulaire avec les valeurs actuelles de la tontine
   const form = useZodForm({
-    schema: CreateTontineSchema,
+    schema: UpdateTontineSchema,
     defaultValues: {
-      name: "",
-      description: "",
-      type: TontineType.ROTATIF,
-      frequency: TontineFrequency.MONTHLY,
-      contributionPerMember: "0",
-      startDate: new Date(),
-      endDate: new Date(),
-      maxMembers: "2",
-      penaltyFee: "5.0",
-      allocationMethod: AllocationMethod.FIXED,
-      rules: "",
+      name: tontine.name,
+      description: tontine.description,
+      type: tontine.type,
+      frequency: tontine.frequency,
+      contributionPerMember: tontine.contributionPerMember.toString(),
+      startDate: tontine.startDate,
+      endDate: tontine.endDate,
+      maxMembers: tontine.maxMembers.toString(),
+      penaltyFee: tontine.penaltyFee ? tontine.penaltyFee.toString() : "5.0",
+      allocationMethod: tontine.allocationMethod,
+      rules: tontine.rules || "",
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof CreateTontineSchema>) => {
+  // Fonction pour gérer la soumission du formulaire
+  const onSubmit = async (data: z.infer<typeof UpdateTontineSchema>) => {
     setIsLoading(true);
-    toast.info("Création de la tontine en cours...");
+    toast.info("Mise à jour de la tontine en cours...");
 
-    const result = await createTontine(data);
-    if (!result) {
-      toast.error("Une erreur est survenue lors de la création de la tontine");
-      setIsLoading(false);
-      return;
-    }
-    if (!result.success) {
-      toast.error(result.error || "Erreur lors de la création de la tontine");
-      setIsLoading(false);
-      return;
-    }
+    try {
+      const result = await updateTontine(tontine.id, data);
 
-    toast.success("Tontine créée avec succès !");
-    router.push(`/dashboard/tontines/${result.tontineId}`);
-    setIsLoading(false);
+      if (!result.success) {
+        toast.error(
+          result.error || "Erreur lors de la mise à jour de la tontine",
+        );
+        setIsLoading(false);
+        return;
+      }
+
+      toast.success("La tontine a été mise à jour avec succès");
+      router.refresh();
+    } catch (error) {
+      toast.error(
+        "Une erreur est survenue lors de la mise à jour de la tontine",
+      );
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <Card className="w-full max-w-3xl">
+    <Card>
       <CardHeader>
-        <CardTitle className="text-center">
-          Créer une nouvelle tontine
-        </CardTitle>
-        <CardDescription className="text-center">
-          Configurez les paramètres de votre tontine ci-dessous
+        <CardTitle>Modifier la tontine</CardTitle>
+        <CardDescription>
+          Vous pouvez modifier les informations générales de votre tontine ici.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -118,8 +146,6 @@ export function CreateTontineForm() {
           <div className="space-y-6">
             {/* Informations générales */}
             <div className="space-y-4">
-              <h3 className="text-lg font-medium">Informations générales</h3>
-
               <FormField
                 control={form.control}
                 name="name"
@@ -391,10 +417,10 @@ export function CreateTontineForm() {
                 {isLoading ? (
                   <>
                     <ButtonLoading className="mr-2" />
-                    Création en cours...
+                    Mise à jour en cours...
                   </>
                 ) : (
-                  "Créer la tontine"
+                  "Enregistrer les modifications"
                 )}
               </Button>
             </CardFooter>

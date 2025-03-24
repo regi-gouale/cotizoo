@@ -71,7 +71,11 @@ export const acceptInvitationAction = authAction
         token: input.token,
       },
     });
-    console.log("Invitation trouvée:", invitation);
+    // Vérifier si l'invitation existe et n'est pas déjà acceptée
+    if (!invitation || invitation.status === InvitationStatus.ACCEPTED) {
+      throw new Error("Invitation non trouvée ou déjà acceptée");
+    }
+    // Vérifier si l'invitation n'est pas expirée
     if (!invitation) {
       throw new Error("Invitation non trouvée");
     }
@@ -108,11 +112,19 @@ export const acceptInvitationAction = authAction
         },
       });
 
-      console.log("New member added:", member);
+      // Ajout dans l'historique de la tontine
+      await prisma.tontineHistory.create({
+        data: {
+          tontineId: tontine.id,
+          userId: ctx.user.id,
+          action: "JOIN",
+          details: `${ctx.user.name} a rejoint la tontine.`,
+        },
+      });
     }
 
     // Mise à jour du statut de l'invitation
-    const invitationUpdate = await prisma.invitation.update({
+    await prisma.invitation.update({
       where: {
         id: invitation.id,
       },
@@ -120,7 +132,6 @@ export const acceptInvitationAction = authAction
         status: InvitationStatus.ACCEPTED,
       },
     });
-    console.log("Invitation updated:", invitationUpdate);
 
     return {
       success: true,

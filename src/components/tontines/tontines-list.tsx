@@ -78,18 +78,28 @@ export function TontineCards(props: TontinesListProps) {
 
     if (status === "COMPLETED" || isExpired) {
       return (
-        <Badge variant="outline" className="bg-gray-100">
+        <Badge
+          variant="outline"
+          className="bg-secondary/10 text-accent-foreground"
+        >
           Terminée
         </Badge>
       );
     }
 
     if (status === "SUSPENDED") {
-      return <Badge variant="destructive">Suspendue</Badge>;
+      return (
+        <Badge
+          variant="destructive"
+          className="bg-destructive/10 text-destructive"
+        >
+          Suspendue
+        </Badge>
+      );
     }
 
     return (
-      <Badge variant="default" className="bg-green-500">
+      <Badge variant="default" className="bg-primary/10 text-primary">
         En cours
       </Badge>
     );

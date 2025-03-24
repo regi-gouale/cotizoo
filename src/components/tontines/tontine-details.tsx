@@ -20,6 +20,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { updateMemberRole } from "@/lib/actions/update-member-role.action";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { TontineRole, TontineStatus } from "@prisma/client";
 import {
@@ -31,7 +32,9 @@ import {
   Users,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 
 type TontineFrequencyType =
   | "WEEKLY"
@@ -56,6 +59,7 @@ type TontineDetailsProps = {
     endDate: Date;
     penaltyFee: number | null;
     rules?: string | null;
+    beneficiaryOrder: string[];
     members: any[];
     transactions: any[];
     historyLogs: any[];
@@ -76,6 +80,22 @@ export function TontineDetails({
   statistics,
 }: TontineDetailsProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
+
+  const handleRoleChange = async (memberId: string, newRole: TontineRole) => {
+    const result = await updateMemberRole({
+      tontineId: tontine.id,
+      memberId,
+      newRole,
+    });
+    if (result) {
+      toast.success("Rôle du membre mis à jour !");
+      router.refresh();
+    } else {
+      toast.error("Erreur lors de la mise à jour du rôle du membre");
+    }
+  };
+
   // Mapper les types aux labels français
   const tontineTypes = {
     ROTATIF: "Tontine Rotative",
@@ -128,6 +148,11 @@ export function TontineDetails({
       .join("")
       .toUpperCase()
       .substring(0, 2);
+  };
+
+  const getUserFromId = (userId: string) => {
+    const member = tontine.members.find((member) => member.id === userId);
+    return member ? member.user : null;
   };
 
   const handleSuccess = () => {
@@ -245,6 +270,7 @@ export function TontineDetails({
           <TabsTrigger value="members">
             Membres ({statistics.totalMembers})
           </TabsTrigger>
+          <TabsTrigger value="planning">Planning</TabsTrigger>
           <TabsTrigger value="transactions">Transactions</TabsTrigger>
           <TabsTrigger value="history">Historique</TabsTrigger>
         </TabsList>
@@ -386,25 +412,87 @@ export function TontineDetails({
                         </p>
                       </div>
                     </div>
-                    <Badge
-                      variant={member.role === "ADMIN" ? "default" : "outline"}
-                    >
-                      {member.role === "ADMIN" ? "Admin" : "Membre"}
-                    </Badge>
+                    <div className="flex items-center gap-2">
+                      <Badge
+                        variant={
+                          member.role === "ADMIN" ? "default" : "outline"
+                        }
+                      >
+                        {member.role === "ADMIN" ? "Admin" : "Membre"}
+                      </Badge>
+                      {userRole === "ADMIN" && member.role !== "ADMIN" && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleRoleChange(member.id, "ADMIN")}
+                        >
+                          Définir comme Admin
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
             </CardContent>
             {userRole === "ADMIN" && statistics.remainingSlots > 0 && (
               <CardFooter>
-                <Button variant="outline" className="w-full">
-                  Inviter un membre
-                </Button>
+                <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                  <div className="w-full flex items-center justify-center">
+                    <DialogTrigger asChild className="">
+                      <Button
+                        variant="outline"
+                        className="text-primary-foreground dark:text-primary"
+                      >
+                        <PlusCircleIcon className="mr-2 h-4 w-4" />
+                        Inviter un membre
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px]">
+                      <DialogHeader>
+                        <DialogTitle className="sr-only">
+                          Inviter un membre
+                        </DialogTitle>
+                      </DialogHeader>
+                      <InviteMemberForm
+                        onSuccess={handleSuccess}
+                        tontineId={tontine.id}
+                      />
+                    </DialogContent>
+                  </div>
+                </Dialog>
               </CardFooter>
             )}
           </Card>
         </TabsContent>
-
+        {/* Onglet Planning */}
+        <TabsContent value="planning" className="pt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Planning des bénéficiaires</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {tontine.beneficiaryOrder.map(
+                  (memberId: string, index: number) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between p-3 border rounded-md"
+                    >
+                      <div>
+                        <p className="font-medium">
+                          {getUserFromId(memberId).name}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          Bénéficiaire n°{index + 1}
+                        </p>
+                      </div>
+                    </div>
+                  ),
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
         {/* Onglet Transactions */}
         <TabsContent value="transactions" className="pt-4">
           <Card>
@@ -531,6 +619,13 @@ function getHistoryActionLabel(action: string) {
     PAYMENT: "Paiement enregistré",
     RULES_UPDATED: "Règles mises à jour",
     REDISTRIBUTION: "Redistribution des fonds",
+    SUSPENSION: "Tontine suspendue",
+    RESUMPTION: "Tontine reprise",
+    COMPLETION: "Tontine terminée",
+    CANCELLATION: "Tontine annulée",
+    BENEFICIARY_ORDER_UPDATED: "Ordre des bénéficiaires mis à jour",
+    MEMBER_ROLE_UPDATED: "Rôle du membre mis à jour",
+    BENEFICIARY_ORDER: "Ordre des bénéficiaires",
   };
 
   return labels[action] || action;
