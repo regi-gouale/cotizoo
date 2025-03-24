@@ -3,9 +3,12 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { UpdateTontineSchema } from "@/lib/schemas/update-tontine.schema";
+import { HistoryAction } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { z } from "zod";
+import { UpdateBeneficiaryOrderSchema } from "../schemas/update-beneficiary-order.schema";
+import { authAction } from "./safe-actions";
 
 export async function updateTontine(
   tontineId: string,
@@ -147,3 +150,23 @@ export async function updateTontine(
     };
   }
 }
+
+export const updateBeneficiaryOrder = authAction
+  .schema(UpdateBeneficiaryOrderSchema)
+  .action(async ({ parsedInput: input, ctx }) => {
+    const tontine = await prisma.tontine.update({
+      where: { id: input.tontineId },
+      data: { beneficiaryOrder: input.beneficiaryOrder },
+    });
+    // Ajouter un historique de modification
+    await prisma.tontineHistory.create({
+      data: {
+        tontineId: input.tontineId,
+        action: HistoryAction.BENEFICIARY_ORDER,
+        details: `Ordre des bénéficiaires mis à jour.`,
+        userId: ctx.user.id,
+      },
+    });
+    revalidatePath(`/dashboard/tontines/${input.tontineId}/settings`);
+    return tontine;
+  });

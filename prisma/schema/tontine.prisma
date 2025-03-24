@@ -12,6 +12,7 @@ model Tontine {
   penaltyFee            Float?           @default(5.0)
   allocationMethod      AllocationMethod @default(FIXED)
   rules                 String?
+  beneficiaryOrder      String[]
   createdAt             DateTime         @default(now())
   updatedAt             DateTime         @updatedAt
   members               UserTontine[]

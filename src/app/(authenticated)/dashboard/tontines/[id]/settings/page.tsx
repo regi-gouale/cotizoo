@@ -1,3 +1,4 @@
+import { BeneficiaryOrderForm } from "@/components/tontines/beneficiary-order-form";
 import { TontineSettingsForm } from "@/components/tontines/tontine-settings-form";
 import { TontineSuspendForm } from "@/components/tontines/tontine-suspend-form";
 import { updateExpiredTontineStatus } from "@/lib/actions/update-tontine-status.action";
@@ -28,8 +29,12 @@ export default async function TontineIdSettingsPage({
     include: {
       members: {
         where: {
-          userId: session.user.id,
-          role: "ADMIN", // Vérifier que l'utilisateur est admin de cette tontine
+          // userId: session.user.id,
+          // role: "ADMIN", // Vérifier que l'utilisateur est admin de cette tontine
+        },
+        select: {
+          user: true,
+          id: true,
         },
       },
     },
@@ -55,6 +60,23 @@ export default async function TontineIdSettingsPage({
           <div className="space-y-4">
             <h2 className="text-xl font-semibold">Informations générales</h2>
             <TontineSettingsForm tontine={tontine} />
+          </div>
+          {/* Section pour l'ordre des bénéficiaires */}
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold">Ordre des bénéficiaires</h2>
+            <p className="text-muted-foreground">
+              Modifiez l'ordre des bénéficiaires de la tontine. Vous pouvez
+              entrer les IDs des membres dans l'ordre souhaité, séparés par des
+              virgules.
+            </p>
+            <BeneficiaryOrderForm
+              members={tontine.members.map((member) => ({
+                id: member.id,
+                name: member.user.name,
+                role: member.user.role,
+              }))}
+              tontineId={tontine.id}
+            />
           </div>
 
           {/* Section pour les actions sensibles */}

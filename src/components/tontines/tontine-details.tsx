@@ -59,6 +59,7 @@ type TontineDetailsProps = {
     endDate: Date;
     penaltyFee: number | null;
     rules?: string | null;
+    beneficiaryOrder: string[];
     members: any[];
     transactions: any[];
     historyLogs: any[];
@@ -80,18 +81,6 @@ export function TontineDetails({
 }: TontineDetailsProps) {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
-
-  // const mutation = useMutation({
-  //   mutationFn: async (data: {
-  //     tontineId: string;
-  //     memberId: string;
-  //     newRole: TontineRole;
-  //   }) => updateMemberRole(data),
-  //   onError: (error) => toast.error(error.message),
-  //   onSuccess: () => {
-  //     toast.success("Rôle du membre mis à jour !");
-  //   },
-  // });
 
   const handleRoleChange = async (memberId: string, newRole: TontineRole) => {
     const result = await updateMemberRole({
@@ -276,6 +265,7 @@ export function TontineDetails({
           <TabsTrigger value="members">
             Membres ({statistics.totalMembers})
           </TabsTrigger>
+          <TabsTrigger value="planning">Planning</TabsTrigger>
           <TabsTrigger value="transactions">Transactions</TabsTrigger>
           <TabsTrigger value="history">Historique</TabsTrigger>
         </TabsList>
@@ -441,15 +431,6 @@ export function TontineDetails({
             </CardContent>
             {userRole === "ADMIN" && statistics.remainingSlots > 0 && (
               <CardFooter>
-                {/* <Button
-                  variant="outline"
-                  className="w-full"
-                  onClick={() => {
-                    setIsOpen(true);
-                  }}
-                >
-                  Inviter un membre
-                </Button> */}
                 <Dialog open={isOpen} onOpenChange={setIsOpen}>
                   <div className="w-full flex items-center justify-center">
                     <DialogTrigger asChild className="">
@@ -478,7 +459,33 @@ export function TontineDetails({
             )}
           </Card>
         </TabsContent>
-
+        {/* Onglet Planning */}
+        <TabsContent value="planning" className="pt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Planning des bénéficiaires</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {tontine.beneficiaryOrder.map(
+                  (memberId: string, index: number) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between p-3 border rounded-md"
+                    >
+                      <div>
+                        <p className="font-medium">{memberId}</p>
+                        <p className="text-sm text-muted-foreground">
+                          Bénéficiaire n°{index + 1}
+                        </p>
+                      </div>
+                    </div>
+                  ),
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
         {/* Onglet Transactions */}
         <TabsContent value="transactions" className="pt-4">
           <Card>
@@ -605,6 +612,13 @@ function getHistoryActionLabel(action: string) {
     PAYMENT: "Paiement enregistré",
     RULES_UPDATED: "Règles mises à jour",
     REDISTRIBUTION: "Redistribution des fonds",
+    SUSPENSION: "Tontine suspendue",
+    RESUMPTION: "Tontine reprise",
+    COMPLETION: "Tontine terminée",
+    CANCELLATION: "Tontine annulée",
+    BENEFICIARY_ORDER_UPDATED: "Ordre des bénéficiaires mis à jour",
+    MEMBER_ROLE_UPDATED: "Rôle du membre mis à jour",
+    BENEFICIARY_ORDER: "Ordre des bénéficiaires",
   };
 
   return labels[action] || action;
