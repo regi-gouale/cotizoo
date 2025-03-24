@@ -30,15 +30,21 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { updateTontine } from "@/lib/actions/update-tontine.action";
 import { UpdateTontineSchema } from "@/lib/schemas/update-tontine.schema";
+import { cn } from "@/lib/utils";
 import {
   AllocationMethod,
   TontineFrequency,
   TontineType,
 } from "@prisma/client";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
+import { CalendarIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
+import { Calendar } from "../ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 // Options pour les types de tontines
 const tontineTypes = [
@@ -292,17 +298,44 @@ export function TontineSettingsForm({ tontine }: TontineSettingsFormProps) {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Date de début</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="date"
-                          {...field}
-                          value={
-                            field.value instanceof Date
-                              ? field.value.toISOString().split("T")[0]
-                              : field.value
-                          }
-                        />
-                      </FormControl>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "w-[240px] pl-3 text-left font-normal",
+                                !field.value && "text-muted-foreground",
+                              )}
+                            >
+                              {field.value ? (
+                                format(field.value, "PPP", {
+                                  locale: fr,
+                                })
+                              ) : (
+                                <span>Choisir une date</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={
+                              field.value instanceof Date
+                                ? field.value
+                                : undefined
+                            }
+                            onSelect={field.onChange}
+                            disabled={(date) =>
+                              date < new Date() || date > new Date("2100-01-01")
+                            }
+                            locale={fr}
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -313,17 +346,56 @@ export function TontineSettingsForm({ tontine }: TontineSettingsFormProps) {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Date de fin</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="date"
-                          {...field}
-                          value={
-                            field.value instanceof Date
-                              ? field.value.toISOString().split("T")[0]
-                              : field.value
-                          }
-                        />
-                      </FormControl>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "w-[240px] pl-3 text-left font-normal",
+                                !field.value && "text-muted-foreground",
+                              )}
+                            >
+                              {field.value ? (
+                                format(field.value, "PPP", {
+                                  locale: fr,
+                                })
+                              ) : (
+                                <span>Choisir une date</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={
+                              field.value instanceof Date
+                                ? field.value
+                                : undefined
+                            }
+                            onSelect={field.onChange}
+                            disabled={(date) =>
+                              // Date should be after start date + 1 month
+                              date <=
+                                (form.getValues("startDate") instanceof Date
+                                  ? new Date(
+                                      new Date(
+                                        form.getValues("startDate"),
+                                      ).setMonth(
+                                        new Date(
+                                          form.getValues("startDate"),
+                                        ).getMonth() + 1,
+                                      ),
+                                    )
+                                  : new Date()) || date > new Date("2100-01-01")
+                            }
+                            locale={fr}
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
                       <FormMessage />
                     </FormItem>
                   )}

@@ -8,6 +8,7 @@ model User {
   status          UserStatus       @default(ACTIVE)
   createdAt       DateTime
   updatedAt       DateTime
+  stripeMandateId String? // Identifiant du mandat Stripe
   sessions        Session[]
   accounts        Account[]
   tontines        UserTontine[]
