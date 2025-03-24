@@ -150,6 +150,11 @@ export function TontineDetails({
       .substring(0, 2);
   };
 
+  const getUserFromId = (userId: string) => {
+    const member = tontine.members.find((member) => member.id === userId);
+    return member ? member.user : null;
+  };
+
   const handleSuccess = () => {
     setIsOpen(false);
   };
@@ -474,7 +479,9 @@ export function TontineDetails({
                       className="flex items-center justify-between p-3 border rounded-md"
                     >
                       <div>
-                        <p className="font-medium">{memberId}</p>
+                        <p className="font-medium">
+                          {getUserFromId(memberId).name}
+                        </p>
                         <p className="text-sm text-muted-foreground">
                           Bénéficiaire n°{index + 1}
                         </p>
