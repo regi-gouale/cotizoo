@@ -1,5 +1,6 @@
 "use client";
 
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -38,7 +39,8 @@ import {
 } from "@prisma/client";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Info } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -69,6 +71,7 @@ const allocationMethods = [
 
 export function CreateTontineForm() {
   const [isLoading, setIsLoading] = useState(false);
+  const [sepaWarning, setSepaWarning] = useState<string | null>(null);
   const router = useRouter();
 
   const form = useZodForm({
@@ -105,9 +108,53 @@ export function CreateTontineForm() {
     }
 
     toast.success("Tontine créée avec succès !");
-    router.push(`/dashboard/tontines/${result.tontineId}`);
+
+    // Vérifier si un avertissement concernant le mandat SEPA est présent
+    if (result.sepaWarning) {
+      setSepaWarning(result.sepaWarning);
+    } else {
+      router.push(`/dashboard/tontines/${result.tontineId}`);
+    }
+
     setIsLoading(false);
   };
+
+  // Si un avertissement SEPA est présent, afficher l'écran de succès avec l'avertissement
+  if (sepaWarning) {
+    return (
+      <Card className="w-full max-w-3xl">
+        <CardHeader>
+          <CardTitle className="text-center text-green-600">
+            Tontine créée avec succès !
+          </CardTitle>
+          <CardDescription className="text-center">
+            Votre nouvelle tontine a été créée et est prête à accueillir des
+            membres.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <Alert variant="destructive" className="border-amber-200 bg-amber-50">
+            <Info className="h-5 w-5 text-amber-600" />
+            <AlertDescription className="text-amber-700">
+              {sepaWarning}
+            </AlertDescription>
+          </Alert>
+
+          <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4 justify-center">
+            <Button variant="outline" asChild>
+              <Link href="/dashboard/settings/payment">
+                Configurer le mandat SEPA
+              </Link>
+            </Button>
+
+            <Button onClick={() => router.push(`/dashboard`)}>
+              Aller au tableau de bord
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className="w-full max-w-3xl">
