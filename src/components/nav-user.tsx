@@ -26,6 +26,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { authClient } from "@/lib/auth-client";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -95,9 +96,14 @@ export function NavUser({ user }: { user: UserSidebarNavItem }) {
                 <IconUserCircle />
                 Compte
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <IconCreditCard />
-                Paiements
+              <DropdownMenuItem asChild>
+                <Link
+                  href="/dashboard/settings/payment"
+                  className="flex items-center gap-2 w-full"
+                >
+                  <IconCreditCard />
+                  Paiements
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <IconNotification />

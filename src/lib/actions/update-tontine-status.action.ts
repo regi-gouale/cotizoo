@@ -62,7 +62,7 @@ export async function updateExpiredTontineStatus() {
     const updatedTontineIds = await Promise.all(updatePromises);
 
     // Revalider les chemins pour que les changements soient visibles immédiatement
-    revalidatePath("/dashboard/tontines");
+    // revalidatePath("/dashboard/tontines");
     updatedTontineIds.forEach((id) => {
       revalidatePath(`/dashboard/tontines/${id}`);
     });

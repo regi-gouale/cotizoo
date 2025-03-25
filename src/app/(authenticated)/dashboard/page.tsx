@@ -1,3 +1,4 @@
+import { SepaReminderBanner } from "@/components/dashboard/sepa-reminder-banner";
 import { DataTable } from "@/components/data-table";
 import { SectionCards } from "@/components/section-cards";
 import { auth } from "@/lib/auth";
@@ -27,14 +28,18 @@ export default async function DashboardPage() {
       createdAt: true,
       updatedAt: true,
       tontines: true,
+      stripeMandateId: true,
+      stripeCustomerId: true,
+      stripePaymentMethodId: true,
     },
   })) as unknown as User;
-
-  // console.log("user", user);
 
   return (
     <div className="@container/main flex flex-1 flex-col gap-2">
       <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+        <div className="px-4 lg:px-6">
+          <SepaReminderBanner user={user} />
+        </div>
         <SectionCards user={user} />
         <div className="px-4 lg:px-6">{/* <ChartAreaInteractive /> */}</div>
         <DataTable data={data} />
