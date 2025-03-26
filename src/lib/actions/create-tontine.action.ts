@@ -83,6 +83,8 @@ export async function createTontine(data: z.infer<typeof CreateTontineSchema>) {
         penaltyFee: penaltyFeeDecimal,
         allocationMethod: data.allocationMethod,
         rules: data.rules,
+        // Ajouter automatiquement l'utilisateur créateur comme premier bénéficiaire
+        beneficiariesOrder: [session.user.id],
         // Créer automatiquement un lien avec l'utilisateur créateur en tant qu'admin
         members: {
           create: {

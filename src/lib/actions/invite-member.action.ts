@@ -112,6 +112,16 @@ export const acceptInvitationAction = authAction
         },
       });
 
+      // Ajouter l'utilisateur à la liste des bénéficiaires s'il n'y est pas déjà
+      await prisma.tontine.update({
+        where: { id: tontine.id },
+        data: {
+          beneficiariesOrder: {
+            push: ctx.user.id,
+          },
+        },
+      });
+
       // Ajout dans l'historique de la tontine
       await prisma.tontineHistory.create({
         data: {
