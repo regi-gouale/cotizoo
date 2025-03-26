@@ -156,7 +156,7 @@ export const updateBeneficiaryOrder = authAction
   .action(async ({ parsedInput: input, ctx }) => {
     const tontine = await prisma.tontine.update({
       where: { id: input.tontineId },
-      data: { beneficiaryOrder: input.beneficiaryOrder },
+      data: { beneficiariesOrder: input.beneficiaryOrder },
     });
     // Ajouter un historique de modification
     await prisma.tontineHistory.create({

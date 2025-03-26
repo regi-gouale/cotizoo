@@ -9,6 +9,7 @@ import { formatCurrency, formatDate } from "@/lib/utils";
 import { TontineFrequency, TontineStatus, TontineType } from "@prisma/client";
 import { headers } from "next/headers";
 import { z } from "zod";
+import { updateBeneficiaryOrder } from "./update-tontine.action";
 
 export type CreateTontineInput = z.infer<typeof CreateTontineSchema>;
 
@@ -83,8 +84,6 @@ export async function createTontine(data: z.infer<typeof CreateTontineSchema>) {
         penaltyFee: penaltyFeeDecimal,
         allocationMethod: data.allocationMethod,
         rules: data.rules,
-        // Ajouter automatiquement l'utilisateur créateur comme premier bénéficiaire
-        beneficiariesOrder: [session.user.id],
         // Créer automatiquement un lien avec l'utilisateur créateur en tant qu'admin
         members: {
           create: {
@@ -103,6 +102,10 @@ export async function createTontine(data: z.infer<typeof CreateTontineSchema>) {
       },
     });
 
+    await updateBeneficiaryOrder({
+      tontineId: tontine.id,
+      beneficiaryOrder: [session.user.id],
+    });
     // Envoi de l'email de confirmation au créateur
     const tontineUrl = `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/tontines/${tontine.id}`;
 
