@@ -4,12 +4,12 @@ model Tontine {
   description           String
   type                  TontineType
   frequency             TontineFrequency @default(MONTHLY)
-  contributionPerMember Float
+  contributionPerMember Float?           @default(0.0)
   startDate             DateTime
   endDate               DateTime
   maxMembers            Int
   status                TontineStatus    @default(ACTIVE)
-  penaltyFee            Float?           @default(5.0)
+  penaltyFee            Float?           @default(0.0)
   allocationMethod      AllocationMethod @default(FIXED)
   rules                 String?
   beneficiaryOrder      String[]
@@ -25,34 +25,18 @@ model Tontine {
 }
 
 model UserTontine {
-  id        String      @id @default(cuid())
-  userId    String
-  tontineId String
-  role      TontineRole @default(MEMBER)
-  joinedAt  DateTime    @default(now())
+  id           String      @id @default(cuid())
+  userId       String
+  tontineId    String
+  role         TontineRole @default(MEMBER)
+  joinedAt     DateTime    @default(now())
+  contribution Float?      @default(0.0)
 
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   tontine Tontine @relation(fields: [tontineId], references: [id], onDelete: Cascade)
 
   @@unique([userId, tontineId])
   @@map("user_tontine")
-}
-
-model Transaction {
-  id            String            @id @default(cuid())
-  userId        String
-  tontineId     String
-  amount        Float
-  type          TransactionType
-  status        TransactionStatus @default(PENDING)
-  paymentMethod String?
-  reference     String?
-  createdAt     DateTime          @default(now())
-
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tontine Tontine @relation(fields: [tontineId], references: [id], onDelete: Cascade)
-
-  @@map("transaction")
 }
 
 model TontineHistory {

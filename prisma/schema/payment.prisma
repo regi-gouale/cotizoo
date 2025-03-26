@@ -1,0 +1,34 @@
+model Transaction {
+  id            String            @id @default(cuid())
+  userId        String
+  tontineId     String
+  amount        Float
+  type          TransactionType
+  status        TransactionStatus @default(PENDING)
+  paymentMethod String?
+  reference     String?
+  createdAt     DateTime          @default(now())
+
+  user                 User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tontine              Tontine                @relation(fields: [tontineId], references: [id], onDelete: Cascade)
+  scheduledDirectDebit scheduledDirectDebit[]
+
+  @@map("transaction")
+}
+
+model scheduledDirectDebit {
+  id              String            @id @default(cuid())
+  userId          String
+  transactionId   String
+  amount          Float
+  currency        String
+  paymentMethodId String
+  executionDate   DateTime
+  status          TransactionStatus @default(PENDING)
+  createdAt       DateTime          @default(now())
+
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transaction Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+
+  @@map("scheduled_direct_debit")
+}

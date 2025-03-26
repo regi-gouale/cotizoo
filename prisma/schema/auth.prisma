@@ -1,11 +1,11 @@
 model User {
-  id                    String           @id
+  id                    String                 @id
   name                  String
   email                 String
   emailVerified         Boolean
   image                 String?
-  role                  UserRole         @default(USER)
-  status                UserStatus       @default(ACTIVE)
+  role                  UserRole               @default(USER)
+  status                UserStatus             @default(ACTIVE)
   createdAt             DateTime
   updatedAt             DateTime
   stripeCustomerId      String?
@@ -19,7 +19,8 @@ model User {
   tickets               Ticket[] // Relation avec les tickets
   contactMessages       ContactMessage[] // Relation avec les messages de contact
   comments              Comment[] // Relation avec les commentaires
-  invitationsSent       Invitation[]     @relation("invitationCreator")
+  invitationsSent       Invitation[]           @relation("invitationCreator")
+  scheduledDirectDebit  scheduledDirectDebit[]
 
   @@unique([email])
   @@map("user")

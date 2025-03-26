@@ -114,7 +114,8 @@ export async function createTontine(data: z.infer<typeof CreateTontineSchema>) {
         startDate: formatDate(tontine.startDate),
         endDate: formatDate(tontine.endDate),
         frequency: getTontineFrequencyLabel(tontine.frequency),
-        contributionAmount: formatCurrency(tontine.contributionPerMember),
+        contributionAmount: formatCurrency(tontine.contributionPerMember ?? 0),
+
         maxMembers: tontine.maxMembers,
         tontineUrl: tontineUrl,
       }),

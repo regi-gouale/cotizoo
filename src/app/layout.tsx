@@ -1,4 +1,5 @@
 import { Footer } from "@/components/layout/footer";
+import { startCronJob } from "@/lib/cron";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/providers/theme-provider";
 import type { Metadata } from "next";
@@ -28,6 +29,8 @@ const rowdies = Rowdies({
   subsets: ["latin"],
   weight: ["400"],
 });
+
+await startCronJob();
 
 export default function RootLayout({
   children,
