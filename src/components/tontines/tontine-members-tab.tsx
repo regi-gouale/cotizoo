@@ -18,15 +18,33 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { updateMemberRole } from "@/lib/actions/update-member-role.action";
 import { formatDate } from "@/lib/utils";
 import { TontineRole } from "@prisma/client";
-import { PlusCircleIcon } from "lucide-react";
+import { BanknoteIcon, InfoIcon, PlusCircleIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { InviteMemberForm } from "./invite-member-form";
 import { TontineDetailsProps } from "./tontine-details-types";
 import { getInitials } from "./tontine-details-utils";
+
+type MemberWithSepaStatus = {
+  id: string;
+  userId: string;
+  name: string;
+  email: string;
+  image: string | null;
+  role: TontineRole;
+  joinedAt: Date;
+  hasSepaMandate: boolean;
+};
 
 type MembersTabProps = {
   tontine: TontineDetailsProps["tontine"];
@@ -46,6 +64,37 @@ export function MembersTab({
   onInviteMemberSuccess,
 }: MembersTabProps) {
   const router = useRouter();
+  const [membersWithSepa, setMembersWithSepa] = useState<
+    MemberWithSepaStatus[]
+  >([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Récupérer les statuts SEPA des membres
+  useEffect(() => {
+    const fetchMembersSepaStatus = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch(
+          `/api/tontine/${tontine.id}/members-sepa-status`,
+        );
+
+        if (!response.ok) {
+          throw new Error("Erreur lors de la récupération des statuts SEPA");
+        }
+
+        const data = await response.json();
+        setMembersWithSepa(data);
+      } catch (error) {
+        console.error("Erreur:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (userRole === "ADMIN") {
+      fetchMembersSepaStatus();
+    }
+  }, [tontine.id, userRole]);
 
   const handleRoleChange = async (memberId: string, newRole: TontineRole) => {
     const result = await updateMemberRole({
@@ -61,6 +110,16 @@ export function MembersTab({
     }
   };
 
+  // Fonction pour obtenir le statut SEPA d'un membre
+  const getMemberSepaStatus = (memberId: string) => {
+    if (userRole !== "ADMIN" || isLoading || membersWithSepa.length === 0) {
+      return null;
+    }
+
+    const memberWithSepa = membersWithSepa.find((m) => m.id === memberId);
+    return memberWithSepa?.hasSepaMandate;
+  };
+
   return (
     <div className="pt-4">
       <Card>
@@ -74,6 +133,24 @@ export function MembersTab({
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
+            {userRole === "ADMIN" && (
+              <div className="text-sm text-muted-foreground flex items-center mb-4 bg-muted p-2 rounded-md">
+                <InfoIcon className="h-4 w-4 mr-2" />
+                <span>
+                  Statut du mandat SEPA :{" "}
+                  <span className="inline-flex items-center ml-1">
+                    <BanknoteIcon className="h-4 w-4 text-green-500 mr-1" />{" "}
+                    Actif
+                  </span>{" "}
+                  ou{" "}
+                  <span className="inline-flex items-center ml-1">
+                    <BanknoteIcon className="h-4 w-4 text-gray-400 mr-1" /> Non
+                    configuré
+                  </span>
+                </span>
+              </div>
+            )}
+
             {tontine.members.map((member: any) => (
               <div
                 key={member.id}
@@ -94,6 +171,25 @@ export function MembersTab({
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
+                  {userRole === "ADMIN" && (
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="mr-2">
+                            <BanknoteIcon
+                              className={`h-5 w-5 ${getMemberSepaStatus(member.id) ? "text-green-500" : "text-gray-400"}`}
+                            />
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          {getMemberSepaStatus(member.id)
+                            ? "Mandat SEPA configuré"
+                            : "Mandat SEPA non configuré"}
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  )}
+
                   <Badge
                     variant={member.role === "ADMIN" ? "default" : "outline"}
                   >
