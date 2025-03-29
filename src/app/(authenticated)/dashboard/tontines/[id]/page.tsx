@@ -2,15 +2,12 @@ import { TontineDetails } from "@/components/tontines/tontine-details";
 import { updateExpiredTontineStatus } from "@/lib/actions/update-tontine-status.action";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { PageParams } from "@/types/next";
 import { TontineStatus } from "@prisma/client";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 
-export default async function TontinePage({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default async function TontinePage(props: PageParams<{ id: string }>) {
   const session = await auth.api.getSession({ headers: await headers() });
 
   if (!session) {
@@ -23,7 +20,7 @@ export default async function TontinePage({
   // Récupération des données de la tontine avec les membres et l'historique
   const tontine = await prisma.tontine.findUnique({
     where: {
-      id: await params.id,
+      id: (await props.params).id,
     },
     include: {
       members: {

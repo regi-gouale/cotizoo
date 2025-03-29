@@ -1,14 +1,12 @@
 import { ResetPasswordForm } from "@/components/auth/reset-password-form";
 import { auth } from "@/lib/auth";
+import { PageParams } from "@/types/next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-export default async function ResetPasswordPage({
-  searchParams,
-}: {
-  searchParams: { token?: string; error?: string };
-}) {
-  const { token, error } = searchParams;
+export default async function ResetPasswordPage(props: PageParams) {
+  const { token: tokenParam, error } = await props.searchParams;
+  const token = Array.isArray(tokenParam) ? tokenParam[0] : tokenParam;
   const session = await auth.api.getSession({
     headers: await headers(),
   });

@@ -19,13 +19,13 @@ export type TontineDetailsProps = {
     type: "ROTATIF" | "INVESTISSEMENT" | "PROJET";
     frequency: TontineFrequencyType;
     allocationMethod: "FIXED" | "VOTE" | "RANDOM" | "ENCHERE";
-    contributionPerMember: number;
+    contributionPerMember: number | null;
     maxMembers: number;
     startDate: Date;
     endDate: Date;
     penaltyFee: number | null;
     rules?: string | null;
-    beneficiaryOrder: string[];
+    beneficiariesOrder: string[];
     members: any[];
     transactions: any[];
     historyLogs: any[];

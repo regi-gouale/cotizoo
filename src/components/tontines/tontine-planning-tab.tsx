@@ -21,28 +21,30 @@ export function PlanningTab({ tontine }: PlanningTabProps) {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {tontine.beneficiaryOrder.map((memberId: string, index: number) => {
-              const user = getUserFromId(memberId);
-              return (
-                <div
-                  key={index}
-                  className="flex items-center justify-between p-3 border rounded-md"
-                >
-                  <div>
-                    {user ? (
-                      <p className="font-medium">{user.name}</p>
-                    ) : (
-                      <p className="font-medium text-muted-foreground">
-                        Utilisateur inconnu
+            {tontine.beneficiariesOrder.map(
+              (memberId: string, index: number) => {
+                const user = getUserFromId(memberId);
+                return (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between p-3 border rounded-md"
+                  >
+                    <div>
+                      {user ? (
+                        <p className="font-medium">{user.name}</p>
+                      ) : (
+                        <p className="font-medium text-muted-foreground">
+                          Utilisateur inconnu
+                        </p>
+                      )}
+                      <p className="text-sm text-muted-foreground">
+                        Bénéficiaire n°{index + 1}
                       </p>
-                    )}
-                    <p className="text-sm text-muted-foreground">
-                      Bénéficiaire n°{index + 1}
-                    </p>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              },
+            )}
           </div>
         </CardContent>
       </Card>

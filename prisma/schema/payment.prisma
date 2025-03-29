@@ -11,12 +11,12 @@ model Transaction {
 
   user                 User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
   tontine              Tontine                @relation(fields: [tontineId], references: [id], onDelete: Cascade)
-  scheduledDirectDebit scheduledDirectDebit[]
+  scheduledDirectDebit ScheduledDirectDebit[]
 
   @@map("transaction")
 }
 
-model scheduledDirectDebit {
+model ScheduledDirectDebit {
   id              String            @id @default(cuid())
   userId          String
   transactionId   String

@@ -1,19 +1,20 @@
 import { SignUpForm } from "@/components/auth/sign-up-form";
 import { auth } from "@/lib/auth";
+import { PageParams } from "@/types/next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-export default async function SignupPage({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
+export default async function SignupPage(props: PageParams) {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
 
-  const token = (await searchParams.token) as string;
-  const tontineId = (await searchParams.tontineId) as string;
+  const { token: tokenParam, tontineId: tontineIdParam } =
+    await props.searchParams;
+  const token = Array.isArray(tokenParam) ? tokenParam[0] : tokenParam;
+  const tontineId = Array.isArray(tontineIdParam)
+    ? tontineIdParam[0]
+    : tontineIdParam;
 
   // Si l'utilisateur est connecté et qu'il a un token d'invitation
   if (session && token) {

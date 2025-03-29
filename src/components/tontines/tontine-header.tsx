@@ -98,11 +98,10 @@ export function TontineStats({
             >
               <DialogTrigger asChild>
                 <Button
-                  variant="outline"
-                  className="text-primary-foreground dark:text-primary"
+                  variant="ghost"
+                  className="p-0 w-8 h-8 rounded-md data-[state=open]:bg-muted"
                 >
-                  <PlusCircleIcon className="mr-2 h-4 w-4" />
-                  Ajouter
+                  <PlusCircleIcon className="mr-2 size-5" />
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
@@ -138,7 +137,7 @@ export function TontineStats({
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {formatCurrency(tontine.contributionPerMember)}
+            {formatCurrency(tontine.contributionPerMember!)}
           </div>
           <p className="text-sm text-muted-foreground">
             par personne {tontineFrequencies[tontine.frequency].toLowerCase()}
@@ -160,7 +159,7 @@ export function TontineStats({
                 {formatDate(statistics.nextContributionDate)}
               </div>
               <p className="text-sm text-muted-foreground">
-                {formatCurrency(tontine.contributionPerMember)} à verser
+                {formatCurrency(tontine.contributionPerMember!)} à verser
               </p>
             </>
           ) : (

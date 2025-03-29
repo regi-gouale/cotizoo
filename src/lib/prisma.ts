@@ -2,12 +2,13 @@ import { PrismaClient } from "@prisma/client";
 
 // Création de l'instance Prisma avec logging en mode développement
 const prismaClientSingleton = () => {
-  return new PrismaClient({
-    log:
-      process.env.NODE_ENV === "development"
-        ? ["query", "error", "warn"]
-        : ["error"],
-  });
+  return new PrismaClient();
+  // {
+  //   log:
+  //     process.env.NODE_ENV === "development"
+  //       ? ["query", "error", "warn"]
+  //       : ["error"],
+  // }
 };
 
 // Type de l'instance Prisma
