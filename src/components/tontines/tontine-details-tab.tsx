@@ -95,14 +95,14 @@ export function TontineDetailsTab({
               <div>
                 <h3 className="font-medium">Cotisation individuelle</h3>
                 <p className="text-xl">
-                  {formatCurrency(tontine.contributionPerMember)}
+                  {formatCurrency(tontine.contributionPerMember!)}
                 </p>
               </div>
               <div>
                 <h3 className="font-medium">Reste à collecter</h3>
                 <p className="text-xl">
                   {formatCurrency(
-                    tontine.contributionPerMember * tontine.maxMembers -
+                    tontine.contributionPerMember! * tontine.maxMembers -
                       statistics.totalContributed,
                   )}
                 </p>

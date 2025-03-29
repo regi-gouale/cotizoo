@@ -9,27 +9,25 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { auth } from "@/lib/auth";
+import { PageParams } from "@/types/next";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-export default async function VerifyEmailPage({
-  searchParams,
-}: {
-  searchParams: { token?: string; error?: string };
-}) {
+export default async function VerifyEmailPage(props: PageParams) {
+  const { token, error } = await props.searchParams;
   const session = await auth.api.getSession({
     headers: await headers(),
   });
 
   // Rediriger vers le dashboard si l'utilisateur est déjà connecté et qu'il n'y a pas de token
-  if (session && !searchParams.token) {
+  if (session && !token) {
     redirect("/dashboard");
   }
 
   // Vérifier si un token est présent et s'il y a une erreur
-  const hasToken = !!searchParams.token;
-  const hasError = !!searchParams.error;
+  const hasToken = !!token;
+  const hasError = !!error;
 
   // Si l'utilisateur a cliqué sur le lien dans l'email
   if (hasToken && !hasError) {

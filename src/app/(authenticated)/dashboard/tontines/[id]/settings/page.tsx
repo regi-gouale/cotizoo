@@ -4,14 +4,13 @@ import { TontineSuspendForm } from "@/components/tontines/tontine-suspend-form";
 import { updateExpiredTontineStatus } from "@/lib/actions/update-tontine-status.action";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { PageParams } from "@/types/next";
 import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 
-export default async function TontineIdSettingsPage({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default async function TontineIdSettingsPage(
+  props: PageParams<{ id: string }>,
+) {
   const session = await auth.api.getSession({ headers: await headers() });
 
   if (!session) {
@@ -24,7 +23,7 @@ export default async function TontineIdSettingsPage({
   // Récupération des données de la tontine
   const tontine = await prisma.tontine.findUnique({
     where: {
-      id: params.id,
+      id: (await props.params).id,
     },
     include: {
       members: {

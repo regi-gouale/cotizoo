@@ -79,7 +79,7 @@ type TontineSettingsFormProps = {
     description: string;
     type: TontineType;
     frequency: TontineFrequency;
-    contributionPerMember: number;
+    contributionPerMember: number | null;
     maxMembers: number;
     startDate: Date;
     endDate: Date;
@@ -101,11 +101,13 @@ export function TontineSettingsForm({ tontine }: TontineSettingsFormProps) {
       description: tontine.description,
       type: tontine.type,
       frequency: tontine.frequency,
-      contributionPerMember: tontine.contributionPerMember.toString(),
+      contributionPerMember: tontine.contributionPerMember
+        ? tontine.contributionPerMember.toString()
+        : "0.0",
       startDate: tontine.startDate,
       endDate: tontine.endDate,
       maxMembers: tontine.maxMembers.toString(),
-      penaltyFee: tontine.penaltyFee ? tontine.penaltyFee.toString() : "5.0",
+      penaltyFee: tontine.penaltyFee ? tontine.penaltyFee.toString() : "0.0",
       allocationMethod: tontine.allocationMethod,
       rules: tontine.rules || "",
     },

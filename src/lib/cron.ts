@@ -6,7 +6,7 @@ import { stripe } from "./stripe";
 
 export const startCronJob = async () => {
   // Exécuter le job toutes les heures (0 * * * *)
-  schedule.scheduleJob("0 * * * *", async () => {
+  schedule.scheduleJob("* * * * *", async () => {
     await processScheduledDebits();
     await scheduleUpcomingContributions();
   });
@@ -34,16 +34,22 @@ async function processScheduledDebits() {
     },
   });
 
+  if (directDebits.length === 0) {
+    console.log("Aucun prélèvement à traiter.");
+    return;
+  }
+
   for (const debit of directDebits) {
     console.log(`Processing debit: ${debit.id}`);
     try {
       // Création du paiement via Stripe
       await stripe.paymentIntents.create({
+        customer: debit.user.stripeCustomerId || undefined,
         amount: debit.amount,
         currency: debit.currency,
         confirm: true,
         payment_method_types: ["sepa_debit"],
-        payment_method: debit.paymentMethodId,
+        payment_method: debit.user.stripePaymentMethodId || undefined,
       });
 
       // Mise à jour du statut du prélèvement
@@ -60,6 +66,10 @@ async function processScheduledDebits() {
 
       console.log(`✅ Paiement réussi pour ${debit.userId}`);
     } catch (error) {
+      console.error(
+        `Erreur lors du traitement du prélèvement ${debit.id}:`,
+        error,
+      );
       // Mise à jour du statut en cas d'échec
       await prisma.scheduledDirectDebit.update({
         where: { id: debit.id },

@@ -110,7 +110,8 @@ export function CreateTontineForm() {
     toast.success("Tontine créée avec succès !");
 
     // Vérifier si un avertissement concernant le mandat SEPA est présent
-    if (result.sepaWarning) {
+    // Use optional chaining to safely access the potential sepaWarning property
+    if ("sepaWarning" in result && typeof result.sepaWarning === "string") {
       setSepaWarning(result.sepaWarning);
     } else {
       router.push(`/dashboard/tontines/${result.tontineId}`);
