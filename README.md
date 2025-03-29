@@ -1,6 +1,6 @@
 # Cotizoo - Application de Gestion de Tontines
 
-![Version](https://img.shields.io/badge/version-0.1.1-blue.svg)
+![Version](https://img.shields.io/badge/version-0.1.2-blue.svg)
 ![Status](https://img.shields.io/badge/status-développement-orange.svg)
 
 Cotizoo est une application moderne qui simplifie la gestion des tontines avec collecte et redistribution automatique des fonds, ainsi que des options d'assurance pour les membres.
