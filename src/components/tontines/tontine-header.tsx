@@ -38,7 +38,11 @@ export function TontineHeader({ tontine, userRole }: TontineHeaderProps) {
     }
 
     if (status === "SUSPENDED") {
-      return <Badge variant="destructive">Suspendue</Badge>;
+      return (
+        <Badge variant="destructive" className="text-white">
+          Suspendue
+        </Badge>
+      );
     }
 
     return (

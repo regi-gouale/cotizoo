@@ -43,7 +43,7 @@ export function TontineFilters() {
   );
 
   return (
-    <div className="flex flex-wrap gap-2 mb-4">
+    <div className="flex flex-wrap gap-2 mb-4 md:ml-10">
       <Button
         variant={showActive && !showAllStatuses ? "default" : "outline"}
         size="sm"
